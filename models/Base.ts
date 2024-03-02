@@ -3,9 +3,9 @@ import { HTTPClient } from 'koajax';
 export const isServer = () => typeof window === 'undefined';
 
 const VercelHost = process.env.VERCEL_URL,
-  GithubToken = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+  GithubToken = process.env.GITHUB_TOKEN;
 
-const API_Host = isServer()
+export const API_Host = isServer()
   ? VercelHost
     ? `https://${VercelHost}`
     : 'http://localhost:3000'
@@ -17,7 +17,7 @@ export const ownClient = new HTTPClient({
 });
 
 export const githubClient = new HTTPClient({
-  baseURI: 'https://api.github.com/',
+  baseURI: isServer() ? 'https://api.github.com/' : `${API_Host}/api/github/`,
   responseType: 'json',
 }).use(({ request }, next) => {
   if (GithubToken)

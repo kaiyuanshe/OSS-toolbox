@@ -1,38 +1,50 @@
 import { observer } from 'mobx-react';
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
+import { API_Host } from '../models/Base';
 import { i18n } from '../models/Translation';
+import { MainRoutes } from './data';
 
 const { t } = i18n,
   LanguageMenu = dynamic(import('./LanguageMenu'), { ssr: false });
 
-const Name = process.env.NEXT_PUBLIC_SITE_NAME || '';
-
 export const MainNavigator: FC = observer(() => (
   <Navbar bg="primary" variant="dark" fixed="top" expand="sm" collapseOnSelect>
     <Container>
-      <Navbar.Brand href="/">{Name}</Navbar.Brand>
+      <Navbar.Brand href="/">{t('open_source_treasure_box')}</Navbar.Brand>
 
       <Navbar.Toggle aria-controls="navbar-inner" />
 
       <Navbar.Collapse id="navbar-inner">
         <Nav className="me-auto">
-          <Nav.Link href="/article">{t('article')}</Nav.Link>
-
-          <Nav.Link href="/component">{t('component')}</Nav.Link>
-
-          <Nav.Link href="/pagination">{t('pagination')}</Nav.Link>
-
-          <Nav.Link href="/scroll-list">{t('scroll_list')}</Nav.Link>
-
-          <Nav.Link
-            target="_blank"
-            href="https://github.com/idea2app/Next-Bootstrap-TS"
-          >
-            {t('source_code')}
-          </Nav.Link>
+          {MainRoutes().map(({ title, path, subs }) =>
+            path ? (
+              <Nav.Link
+                key={title}
+                className="text-nowrap text-center"
+                href={path}
+                target={
+                  new URL(path, API_Host).origin !== API_Host ? '_blank' : ''
+                }
+              >
+                {title}
+              </Nav.Link>
+            ) : (
+              <NavDropdown key={title} title={title} className="text-center">
+                {subs?.map(({ title, path }) => (
+                  <NavDropdown.Item
+                    key={title}
+                    href={path}
+                    className="text-center text-xxl-start"
+                  >
+                    {title}
+                  </NavDropdown.Item>
+                ))}
+              </NavDropdown>
+            ),
+          )}
         </Nav>
 
         <LanguageMenu />

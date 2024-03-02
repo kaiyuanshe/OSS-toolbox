@@ -59,6 +59,9 @@ dependencies:
   less-loader:
     specifier: ^12.2.0
     version: 12.2.0(less@4.2.0)(webpack@5.90.3)
+  license-filter:
+    specifier: ^0.2.4
+    version: 0.2.4
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -1822,7 +1825,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@swc/helpers': 0.5.3
+      '@swc/helpers': 0.5.6
       react: 18.2.0
     dev: false
 
@@ -2529,9 +2532,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: false
@@ -4524,7 +4524,7 @@ packages:
   /iterable-observer@1.0.1:
     resolution: {integrity: sha512-qy2Kuf1drKVmWgWaRsqdM8EHanAW4xS37j1nFdVP07qiN0Mj4D5sl9dYA8mZJdX/d3De4bhZoFuVWXvcOM1usg==}
     dependencies:
-      '@swc/helpers': 0.5.3
+      '@swc/helpers': 0.5.6
     dev: false
 
   /iterator.prototype@1.1.2:
@@ -4766,6 +4766,12 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /license-filter@0.2.4:
+    resolution: {integrity: sha512-eI7qYK0e/Y96esGFttIIXThHKNHqOUu5olkJ4uRNcvqrhsVnV5FD2qHg0NgO10kMnaYpGPMmOUt1HP9rx0KGyg==}
+    dependencies:
+      '@swc/helpers': 0.5.6
+    dev: false
 
   /lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
@@ -5612,7 +5618,7 @@ packages:
       mobx: '>=6.11'
       react: '>=16'
     dependencies:
-      '@swc/helpers': 0.5.3
+      '@swc/helpers': 0.5.6
       lodash.isequalwith: 4.4.0
       mobx: 6.12.0
       react: 18.2.0
