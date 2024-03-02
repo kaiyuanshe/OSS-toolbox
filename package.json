@@ -25,6 +25,7 @@
     "koajax": "^0.9.6",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
+    "license-filter": "^0.2.4",
     "lodash": "^4.17.21",
     "mobx": "^6.12.0",
     "mobx-i18n": "^0.5.0",
