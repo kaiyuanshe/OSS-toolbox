@@ -26,6 +26,9 @@ export default {
   open_source_mirror: 'Open-Source Mirror',
   license_tool: 'License Tool',
 
+  // GitHub project list page
+  kaiyuanshe_projects: 'KAIYUANSHE projects',
+
   // Pagination Table
   create: 'Create',
   submit: 'Submit',

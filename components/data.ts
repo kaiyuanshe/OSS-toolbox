@@ -9,6 +9,10 @@ export interface Link {
 }
 
 export const MainRoutes: () => Link[] = () => [
+  {
+    title: 'GitHub issues',
+    path: '/issue',
+  },
   { title: t('license_tool'), path: '/tool/license-filter' },
   {
     title: `${t('Web_polyfill_CDN')} v1`,

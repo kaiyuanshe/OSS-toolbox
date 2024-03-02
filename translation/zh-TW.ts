@@ -24,6 +24,9 @@ export default {
   open_source_mirror: '開源鏡像站',
   license_tool: '開源許可證選擇器',
 
+  // GitHub project list page
+  kaiyuanshe_projects: '開源社專案',
+
   // Pagination Table
   create: '新增',
   submit: '提交',
