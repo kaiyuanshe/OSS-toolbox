@@ -17,6 +17,14 @@
 - CI / CD: GitHub [Actions][16] + [Vercel][17]
 - Monitor service: [Sentry][18]
 
+## Major features
+
+### Open Source license filter
+
+- [introduction](https://kaiyuanshe.feishu.cn/wiki/wikcnRn5pkE3BSvqFUMkJPymaG3)
+- [home page](https://oss-toolbox.vercel.app/license-filter/)
+- [source code](pages/license-filter.tsx)
+
 ## Major examples
 
 1. [Markdown articles](pages/article/)

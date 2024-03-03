@@ -11,7 +11,7 @@ const { t } = i18n,
   LanguageMenu = dynamic(import('./LanguageMenu'), { ssr: false });
 
 export const MainNavigator: FC = observer(() => (
-  <Navbar bg="primary" variant="dark" fixed="top" expand="sm" collapseOnSelect>
+  <Navbar bg="primary" variant="dark" fixed="top" expand="lg" collapseOnSelect>
     <Container>
       <Navbar.Brand href="/">{t('open_source_treasure_box')}</Navbar.Brand>
 
