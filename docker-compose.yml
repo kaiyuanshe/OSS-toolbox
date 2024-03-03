@@ -1,13 +1,10 @@
 version: '3'
 
-networks:
-  idea2app:
-
 services:
   oss-toolbox:
     image: kaiyuanshe/oss-toolbox
-    networks:
-      - idea2app
+    ports:
+      - 3002:3000
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:3000/ || exit 1']
       interval: 3s
@@ -25,20 +22,3 @@ services:
       driver: 'json-file'
       options:
         max-size: '10m'
-
-  autoheal:
-    image: willfarrell/autoheal:1.2.0
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-
-  caddy:
-    depends_on:
-      - oss-toolbox
-    image: caddy
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - idea2app
-    command: caddy reverse-proxy --from your.domain.com --to oss-toolbox:3000

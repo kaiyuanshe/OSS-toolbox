@@ -13,14 +13,14 @@ export const MainRoutes: () => Link[] = () => [
     title: 'GitHub issues',
     path: '/issue',
   },
-  { title: t('license_tool'), path: '/tool/license-filter' },
+  { title: t('license_tool'), path: '/license-filter' },
   {
     title: `${t('Web_polyfill_CDN')} v1`,
     path: 'https://polyfill.kaiyuanshe.cn/',
   },
   {
     title: `${t('Web_polyfill_CDN')} v2`,
-    path: 'https://polyfiller.kaiyuanshe.cn/',
+    path: '/polyfill',
   },
   { title: t('open_source_mirror'), path: 'http://mirror.kaiyuanshe.cn/' },
   { title: 'Git Pager', path: 'https://git-pager.vercel.app/' },
