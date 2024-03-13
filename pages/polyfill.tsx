@@ -15,9 +15,9 @@ import {
 } from 'react-bootstrap';
 
 import { PageHead } from '../components/PageHead';
-import polyfillStore, { UserAgent } from '../models/Polyfill';
+import polyfillStore from '../models/Polyfill';
 import { i18n } from '../models/Translation';
-import { PolyfillHost } from './api/polyfill';
+import { PolyfillHost, UserAgent } from './api/polyfill';
 
 export const getServerSideProps = compose(translator(i18n));
 
