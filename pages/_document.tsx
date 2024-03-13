@@ -4,18 +4,18 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://kaiyuanshe.cn/image/KaiYuanShe.png" />
 
         <link rel="manifest" href="/manifest.json" />
         <script src="https://polyfill.web-cell.dev/feature/PWAManifest.js"></script>
 
         <link
           rel="stylesheet"
-          href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         />
         <link
           rel="stylesheet"
-          href="https://unpkg.com/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          href="https://unpkg.com/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         />
       </Head>
 

@@ -28,9 +28,6 @@
 ## Major examples
 
 1. [Markdown articles](pages/article/)
-2. [Editor components](pages/component.tsx)
-3. [Pagination table](pages/pagination.tsx)
-4. [Scroll list](pages/scroll-list.tsx)
 
 ## Best practice
 

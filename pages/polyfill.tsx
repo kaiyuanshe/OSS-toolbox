@@ -3,10 +3,16 @@ import { computed, observable } from 'mobx';
 import { textJoin } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { compose, translator } from 'next-ssr-middleware';
+import { Tree, TreeCheckboxSelectionKeys } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
-import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { Component } from 'react';
-import { Card, Container, Dropdown, DropdownButton } from 'react-bootstrap';
+import {
+  Accordion,
+  Card,
+  Container,
+  Dropdown,
+  DropdownButton,
+} from 'react-bootstrap';
 
 import { PageHead } from '../components/PageHead';
 import polyfillStore, { UserAgent } from '../models/Polyfill';
@@ -27,7 +33,7 @@ export default class PolyfillPage extends Component {
   }
 
   @observable
-  accessor selectOptions: TreeSelectSelectionKeysType = {};
+  accessor selectOptions: TreeCheckboxSelectionKeys = {};
 
   @computed
   get features() {
@@ -49,18 +55,9 @@ export default class PolyfillPage extends Component {
 
     return (
       <main className="d-flex flex-column gap-3 mb-3">
-        <TreeSelect
-          placeholder="features"
-          display="chip"
-          filter
-          selectionMode="checkbox"
-          options={options}
-          value={selectOptions}
-          onChange={({ value }) =>
-            (this.selectOptions = value as TreeSelectSelectionKeysType)
-          }
-        />
-        <div className="d-flex justify-content-around align-items-center">
+        <header className="d-flex justify-content-around align-items-center">
+          <h1>{t('Web_polyfill_CDN')}</h1>
+
           <DropdownButton title={textJoin(t('examples'), currentUA)}>
             {Object.entries(UserAgent).map(([name, value]) => (
               <Dropdown.Item
@@ -72,16 +69,32 @@ export default class PolyfillPage extends Component {
               </Dropdown.Item>
             ))}
           </DropdownButton>
+        </header>
 
-          <h1>{t('Web_polyfill_CDN')}</h1>
-        </div>
+        <Accordion>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>features</Accordion.Header>
+            <Accordion.Body>
+              <Tree
+                filterPlaceholder="features"
+                filter
+                selectionMode="checkbox"
+                value={options}
+                selectionKeys={selectOptions}
+                onSelectionChange={({ value }) =>
+                  (this.selectOptions = value as TreeCheckboxSelectionKeys)
+                }
+              />
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
 
         <Card body>
           <a target="_blank" href={polyfillURL} rel="noreferrer">
             {polyfillURL}
           </a>
           <hr />
-          <pre>
+          <pre className="vh-100 overflow-auto">
             <code>{sourceCode}</code>
           </pre>
         </Card>
