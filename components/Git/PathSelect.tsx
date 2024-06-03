@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { blobFrom } from 'web-utility';
 
 import { CascadeProps, CascadeSelect } from '../Form/CascadeSelect';
-import { getContents } from '../service';
+// import { getContents } from '../service';
 
 export type GitContent = Record<'type' | 'name', string>;
 
@@ -42,6 +42,7 @@ export class PathSelect extends CascadeSelect<SelectProps> {
     } = this;
 
     try {
+      // @ts-ignore
       const contents = await getContents(repository, pathName);
 
       if (contents instanceof Array)

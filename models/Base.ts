@@ -1,9 +1,12 @@
 import { HTTPClient } from 'koajax';
+import { parseCookie } from 'mobx-i18n';
 
 export const isServer = () => typeof window === 'undefined';
 
 const VercelHost = process.env.VERCEL_URL,
-  GithubToken = process.env.GITHUB_TOKEN;
+  GithubToken =
+    parseCookie(globalThis.document?.cookie || '').token ||
+    process.env.GITHUB_TOKEN;
 
 export const API_Host = isServer()
   ? VercelHost
@@ -22,8 +25,8 @@ export const githubClient = new HTTPClient({
 }).use(({ request }, next) => {
   if (GithubToken)
     request.headers = {
+      authorization: `Bearer ${GithubToken}`,
       ...request.headers,
-      Authorization: `Bearer ${GithubToken}`,
     };
   return next();
 });

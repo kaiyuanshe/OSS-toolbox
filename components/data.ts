@@ -25,7 +25,7 @@ export const MainRoutes: () => Link[] = () => [
   { title: t('open_source_mirror'), path: 'http://mirror.kaiyuanshe.cn/' },
   {
     title: 'Git Pager',
-    path: 'https://github.com/login/oauth/authorize?client_id=ca05c339e0ccbe65b91c&scope=user+repo',
+    path: '/article/editor',
   },
   {
     title: t('source_code'),

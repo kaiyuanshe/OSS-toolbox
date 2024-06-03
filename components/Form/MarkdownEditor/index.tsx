@@ -38,7 +38,8 @@ export class MarkdownEditor extends PureComponent<EditorProps> {
     for (let key in props.rules) this.convertor.addRule(key, props.rules[key]);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const MarkdownIME = await import('markdown-ime');
     // @ts-ignore
     MarkdownIME.Enhance(this.root);
   }

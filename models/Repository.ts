@@ -31,8 +31,13 @@ export class RepositoryModel extends ListModel<
   RepositoryFilter
 > {
   client = githubClient;
-  baseURI = 'orgs/kaiyuanshe/repos';
+  baseURI = '';
   indexKey = 'full_name' as const;
+
+  constructor(owner = 'kaiyuanshe') {
+    super();
+    this.baseURI = `orgs/${owner}/repos`;
+  }
 
   relation = {
     issues: memoize(async (URI: string) => {
