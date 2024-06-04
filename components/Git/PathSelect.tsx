@@ -1,94 +1,84 @@
+import { Loading } from 'idea-react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { blobFrom } from 'web-utility';
+import { Component } from 'react';
 
-import { CascadeProps, CascadeSelect } from '../Form/CascadeSelect';
-// import { getContents } from '../service';
+import { GitContent, RepositoryModel } from '../../models/Repository';
+import { SelectInput } from '../Form/SelectInput';
 
-export type GitContent = Record<'type' | 'name', string>;
-
-export interface SelectProps extends CascadeProps {
+export interface PathSelectProps {
   repository: string;
-  filter?: (content: GitContent) => boolean;
-  onLoad?: (URL: string, data?: Blob) => void;
+  onChange?: (path: string) => any;
 }
 
 @observer
-export class PathSelect extends CascadeSelect<SelectProps> {
+export class PathSelect extends Component<PathSelectProps> {
+  repositoryStore?: RepositoryModel;
+
+  get repository() {
+    const [owner, name] = this.props.repository.split('/');
+
+    return { owner, name };
+  }
+
   @observable
-  accessor html_url = '';
+  accessor fileLists: GitContent[][] = [];
 
-  filter: (name: GitContent) => boolean;
+  path: string[] = [];
 
-  constructor(props: SelectProps) {
-    super(props);
+  async componentDidMount() {
+    const { owner, name } = this.repository;
 
-    this.filter = props.filter instanceof Function ? props.filter : Boolean;
+    this.repositoryStore = new RepositoryModel(owner);
 
-    this.html_url = '';
+    this.fileLists = [await this.repositoryStore.getContents(name)];
   }
 
-  reset() {
-    super.reset();
-
-    this.html_url = '';
+  componentDidUpdate({ repository }: Readonly<PathSelectProps>) {
+    if (repository !== this.props.repository) this.componentDidMount();
   }
 
-  async getNextLevel() {
-    const {
-      name,
-      pathName,
-      props: { repository, onLoad },
-    } = this;
+  async setPath({ type, name }: GitContent, index = 0) {
+    this.path = [...this.path.slice(0, index), name];
 
-    try {
-      // @ts-ignore
-      const contents = await getContents(repository, pathName);
+    this.fileLists = this.fileLists.slice(0, index + 1);
 
-      if (contents instanceof Array)
-        return {
-          label: '/',
-          list: contents.filter(this.filter).map(({ name }) => name),
-        };
+    this.props.onChange?.(this.path.join('/'));
 
-      const { type, html_url } = contents;
+    if (type !== 'dir') return;
 
-      if (type !== 'file' || !html_url) return;
-
-      this.html_url = html_url;
-
-      if ('content' in contents)
-        onLoad?.(html_url, blobFrom(`data:;base64,${contents.content}`));
-    } catch (error) {
-      const { name: ErrorClass, status } = error as any;
-
-      if (
-        ErrorClass === 'HttpError' &&
-        status === 404 &&
-        name.includes('.') &&
-        onLoad instanceof Function
-      )
-        onLoad(`https://github.com/${repository}/blob/master/${pathName}`);
-    }
+    const newList = await this.repositoryStore!.getContents(
+      this.repository.name,
+      this.path.join('/'),
+    );
+    this.fileLists = [...this.fileLists, newList];
   }
 
   render() {
-    const { html_url } = this;
+    const { fileLists } = this,
+      loading = this.repositoryStore?.downloading || 0;
 
     return (
-      <>
-        {super.render()}
-        {html_url && (
-          <a
-            className="d-block pt-2"
-            target="_blank"
-            href={html_url}
-            rel="noopener noreferrer"
-          >
-            <code>{html_url}</code>
-          </a>
-        )}
-      </>
+      <div className="d-flex flex-wrap align-items-center gap-2">
+        {loading > 0 && <Loading />}
+
+        {fileLists.map((files, index) => (
+          <>
+            {!!index && <span>/</span>}
+            <span>
+              <SelectInput
+                className="form-control"
+                options={files.map(({ name }) => name)}
+                onBlur={({ currentTarget: { value } }) => {
+                  const file = files.find(({ name }) => name === value);
+
+                  if (file) return this.setPath(file, index);
+                }}
+              />
+            </span>
+          </>
+        ))}
+      </div>
     );
   }
 }

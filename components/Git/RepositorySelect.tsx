@@ -1,3 +1,4 @@
+import { Loading } from 'idea-react';
 import { computed, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
@@ -40,10 +41,13 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
 
   render() {
     const organizations = this.organizationStore.allItems,
-      repositories = this.repositoryStore.allItems;
+      repositories = this.repositoryStore.allItems,
+      downloading =
+        this.organizationStore.downloading || this.repositoryStore.downloading;
 
     return (
       <Row xs={1} sm={2}>
+        {downloading > 0 && <Loading />}
         <Col>
           <SelectInput
             className="form-control"
@@ -55,7 +59,7 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
           <SelectInput
             className="form-control"
             options={repositories.map(({ name }) => name!)}
-            onChange={({ currentTarget: { value } }) =>
+            onBlur={({ currentTarget: { value } }) =>
               this.props.onChange({ owner: this.owner, name: value })
             }
           />

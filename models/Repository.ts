@@ -1,7 +1,7 @@
 import { components } from '@octokit/openapi-types';
 import { memoize } from 'lodash';
 import { Filter, ListModel, toggle } from 'mobx-restful';
-import { averageOf, buildURLData } from 'web-utility';
+import { averageOf, buildURLData, makeArray,PickSingle } from 'web-utility';
 
 import { githubClient } from './Base';
 
@@ -13,6 +13,8 @@ export interface GitRepository extends Repository {
   issues: Issue[];
   languages?: string[];
 }
+export type GitFile = components['schemas']['content-file'];
+export type GitContent = PickSingle<components['schemas']['content-directory']>;
 
 export interface RepositoryFilter extends Filter<GitRepository> {
   relation: (keyof RepositoryModel['relation'])[];
@@ -34,7 +36,7 @@ export class RepositoryModel extends ListModel<
   baseURI = '';
   indexKey = 'full_name' as const;
 
-  constructor(owner = 'kaiyuanshe') {
+  constructor(public owner = 'kaiyuanshe') {
     super();
     this.baseURI = `orgs/${owner}/repos`;
   }
@@ -111,6 +113,35 @@ export class RepositoryModel extends ListModel<
       `orgs/${organization}`,
     );
     return { pageData, totalCount: body!.public_repos };
+  }
+
+  @toggle('downloading')
+  async getContents(repository = this.currentOne.name, path = '') {
+    const { body } = await this.client.get<GitContent[]>(
+      `repos/${this.owner}/${repository}/contents/${path}`,
+    );
+    return makeArray(body);
+  }
+
+  @toggle('downloading')
+  async downloadRaw(
+    path: string,
+    repository = this.currentOne.name,
+    ref = this.currentOne.default_branch,
+  ) {
+    const identity = `${this.owner}/${repository}`;
+
+    if (!ref) {
+      const { default_branch } = await this.getOne(identity);
+
+      ref = default_branch;
+    }
+    const { body } = await this.client.get<ArrayBuffer>(
+      `raw/${identity}/${ref}/${path}`,
+      {},
+      { responseType: 'arraybuffer' },
+    );
+    return body!;
   }
 }
 

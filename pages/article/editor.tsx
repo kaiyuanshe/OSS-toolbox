@@ -13,7 +13,7 @@ export default function EditorPage() {
       <PageHead title="Git Pager" />
       <h1>Git Pager</h1>
 
-      <ArticleEditor repository="kaiyuanshe/Wiki" />
+      <ArticleEditor />
     </Container>
   );
 }

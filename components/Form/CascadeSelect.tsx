@@ -1,7 +1,8 @@
 import { debounce } from 'lodash';
 import { Component } from 'react';
-import { Form } from 'react-bootstrap';
 import { uniqueID } from 'web-utility';
+
+import { SelectInput } from './SelectInput';
 
 export interface CascadeProps {
   required: boolean;
@@ -71,19 +72,14 @@ export abstract class CascadeSelect<
 
           return (
             <span key={IID} className="form-inline d-inline-flex">
-              <Form.Control
+              <SelectInput
                 id={IID}
-                list={LID}
-                onChange={({ target: { value } }) =>
+                options={list}
+                onChange={({ currentTarget: { value } }) =>
                   (value = value.trim()) && this.changeLevel(index, value)
                 }
                 required={!index && required}
               />
-              <datalist id={LID}>
-                {list.map(item => (
-                  <option value={item} key={item} />
-                ))}
-              </datalist>
               <label htmlFor={IID} className="pl-2 pr-2">
                 {label}
               </label>

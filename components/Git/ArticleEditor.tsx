@@ -13,9 +13,10 @@ import { Button, Card, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
+import { GitContent, RepositoryModel } from '../../models/Repository';
 import { ListField } from '../Form/JSONEditor';
 import { MarkdownEditor } from '../Form/MarkdownEditor';
-import { GitContent, PathSelect } from './PathSelect';
+import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
 
 export const fileType = {
@@ -35,7 +36,12 @@ export interface PostMeta
 export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 
 @observer
-export class ArticleEditor extends Component<{ repository: string }> {
+export class ArticleEditor extends Component {
+  @observable
+  accessor repository = '';
+
+  path = '';
+
   private Selector = createRef<PathSelect>();
 
   get selector() {
@@ -114,7 +120,7 @@ export class ArticleEditor extends Component<{ repository: string }> {
   reset = () => {
     this.meta = undefined;
 
-    if (this.selector) this.selector.reset();
+    // if (this.selector) this.selector.reset();
     if (this.core) this.core.raw = '';
   };
 
@@ -127,7 +133,7 @@ export class ArticleEditor extends Component<{ repository: string }> {
   };
 
   fixURL = debounce(() => {
-    const { repository } = this.props,
+    const { repository } = this,
       pageURL = window.location.href.split('?')[0];
 
     if (this.core && this.core.root)
@@ -174,11 +180,7 @@ export class ArticleEditor extends Component<{ repository: string }> {
   submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { repository } = this.props,
-      {
-        selector: { pathName },
-        core,
-      } = this,
+    const { repository, core } = this,
       // @ts-ignore
       { message } = event.currentTarget.elements;
 
@@ -192,7 +194,7 @@ export class ArticleEditor extends Component<{ repository: string }> {
     for (let file of media) {
       const blob = await blobOf(file.src);
 
-      const filePath = pathName.replace(
+      const filePath = this.path.replace(
         /\.\w+$/,
         `/${uniqueID()}.${blob.type.split('/')[1]}`,
       );
@@ -213,7 +215,7 @@ export class ArticleEditor extends Component<{ repository: string }> {
     // @ts-ignore
     await updateContent(
       repository,
-      pathName,
+      this.path,
       message.value.trim(),
       this.getContent() as string,
     );
@@ -231,65 +233,80 @@ export class ArticleEditor extends Component<{ repository: string }> {
     }
   };
 
+  loadFile = async (path: string) => {
+    const type = path.split('.').at(-1)?.toLowerCase();
+
+    if (!['md', 'markdown'].includes(type || '')) return;
+
+    const [owner, name] = this.repository.split('/');
+    const repositoryStore = new RepositoryModel(owner);
+
+    const buffer = await repositoryStore.downloadRaw(path, name);
+
+    this.setContent(path, new Blob([buffer]));
+  };
+
   render() {
-    const { repository } = this.props,
-      { meta, copied } = this;
+    const { repository, meta, copied } = this;
 
     return (
-      <Card className="my-3">
-        <Card.Body as="form" onReset={this.reset} onSubmit={this.submit}>
-          <Card.Title>{repository}</Card.Title>
-          <Form.Group className="row">
-            <RepositorySelect onChange={console.log} />
-          </Form.Group>
-          <Form.Group className="row">
-            <label className="col-sm-2 col-form-label">File path</label>
-            <div className="col-sm-10" onChange={this.onPathClear}>
-              <PathSelect
-                ref={this.Selector}
-                repository={repository}
-                filter={ArticleEditor.contentFilter}
-                onLoad={this.setContent}
-                required
-              />
-            </div>
-          </Form.Group>
-          <Form.Group className="row">
-            <label className="col-sm-2 col-form-label">Commit message</label>
-            <span className="col-sm-7">
-              <Form.Control as="textarea" name="message" required />
-            </span>
-            <span className="col-sm-3 d-flex justify-content-between align-items-center">
-              <Button type="submit">Commit</Button>
-              <Button type="reset" variant="danger">
-                Clear
-              </Button>
-            </span>
-          </Form.Group>
+      <Card
+        className="my-3"
+        body
+        as="form"
+        onReset={this.reset}
+        onSubmit={this.submit}
+      >
+        <Form.Group className="row">
+          <label className="col-sm-2 col-form-label">Repository</label>
+          <RepositorySelect
+            onChange={({ owner, name }) =>
+              (this.repository = `${owner}/${name}`)
+            }
+          />
+        </Form.Group>
+        <Form.Group className="row">
+          <label className="col-sm-2 col-form-label">File path</label>
 
-          {meta && (
-            <div className="form-group">
-              <label>Meta</label>
-              <ListField
-                value={meta}
-                onChange={({ target: { value } }: any) => (this.meta = value)}
-              />
-            </div>
+          {repository && (
+            <PathSelect repository={repository} onChange={this.loadFile} />
           )}
+        </Form.Group>
+        <Form.Group className="row">
+          <label className="col-sm-2 col-form-label">Commit message</label>
+          <span className="col-sm-7">
+            <Form.Control as="textarea" name="message" required />
+          </span>
+          <span className="col-sm-3 d-flex justify-content-between align-items-center">
+            <Button type="submit">Commit</Button>
+            <Button type="reset" variant="danger">
+              Clear
+            </Button>
+          </span>
+        </Form.Group>
 
-          <Form.Group onInput={this.fixURL}>
-            <label>Content</label>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm float-end"
-              onClick={this.copyMarkdown}
-              onBlur={() => (this.copied = false)}
-            >
-              {copied ? '√' : ''} Copy MarkDown
-            </button>
-            <MarkdownEditor ref={this.Core} />
-          </Form.Group>
-        </Card.Body>
+        {meta && (
+          <div className="form-group">
+            <label>Meta</label>
+            <ListField
+              value={meta}
+              onChange={({ target: { value } }: any) => (this.meta = value)}
+            />
+          </div>
+        )}
+
+        <Form.Group onInput={this.fixURL}>
+          <label>Content</label>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm float-end"
+            onClick={this.copyMarkdown}
+            onBlur={() => (this.copied = false)}
+          >
+            {copied ? '√' : ''} Copy MarkDown
+          </button>
+          <MarkdownEditor ref={this.Core} />
+        </Form.Group>
       </Card>
     );
   }
