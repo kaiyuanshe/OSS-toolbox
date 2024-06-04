@@ -1,6 +1,7 @@
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ChangeEvent, Component, ReactNode, SyntheticEvent } from 'react';
+import { DataObject } from 'mobx-restful';
+import { ChangeEvent, Component, ReactNode } from 'react';
 import { Form } from 'react-bootstrap';
 
 import { AddBar } from './AddBar';
@@ -13,9 +14,10 @@ export interface DataMeta {
 }
 
 export interface FieldProps {
-  value: object | any[] | null;
-  onChange?: (event: ChangeEvent) => void;
+  value: DataObject | any[] | null;
+  onChange?: (event: FieldChangeEvent) => void;
 }
+export type FieldChangeEvent = ChangeEvent<{ value: FieldProps['value'] }>;
 
 @observer
 export class ListField extends Component<FieldProps> {
@@ -75,10 +77,7 @@ export class ListField extends Component<FieldProps> {
 
   protected dataChange =
     (method: (item: DataMeta, newKey: string) => any) =>
-    (
-      index: number,
-      { currentTarget: { value: data } }: SyntheticEvent<any>,
-    ) => {
+    (index: number, { currentTarget: { value: data } }: ChangeEvent<any>) => {
       const { children = [] } = this.innerValue;
 
       const item = children[index];
@@ -88,8 +87,8 @@ export class ListField extends Component<FieldProps> {
       method.call(this, item, data);
 
       this.props.onChange?.({
-        target: { value: this.innerValue.value },
-      } as unknown as ChangeEvent);
+        currentTarget: { value: this.innerValue.value },
+      } as FieldChangeEvent);
     };
 
   setKey = this.dataChange((item: DataMeta, newKey: string) => {
@@ -149,7 +148,7 @@ export class ListField extends Component<FieldProps> {
   wrapper(slot: ReactNode) {
     const Tag = this.innerValue.type === 'array' ? 'ol' : 'ul';
 
-    return <Tag className="inline-form">{slot}</Tag>;
+    return <Tag className="list-unstyled d-flex flex-column gap-3">{slot}</Tag>;
   }
 
   render() {
@@ -157,11 +156,11 @@ export class ListField extends Component<FieldProps> {
 
     return this.wrapper(
       <>
-        <li className="form-group">
+        <li>
           <AddBar onSelect={this.addItem} />
         </li>
         {children.map(({ type, key, value }, index) => (
-          <li className="input-group input-group-sm" key={key}>
+          <li className="d-flex align-items-center gap-3" key={key}>
             {field_type === 'object' && (
               <Form.Control
                 defaultValue={key}

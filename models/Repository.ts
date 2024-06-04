@@ -1,9 +1,12 @@
 import { components } from '@octokit/openapi-types';
+import { encodeBase64 } from 'koajax';
 import { memoize } from 'lodash';
 import { Filter, ListModel, toggle } from 'mobx-restful';
 import { averageOf, buildURLData, makeArray,PickSingle } from 'web-utility';
 
 import { githubClient } from './Base';
+import { OrganizationModel } from './Organization';
+import userStore from './User';
 
 type Repository = components['schemas']['minimal-repository'];
 export type Organization = components['schemas']['organization-full'];
@@ -36,10 +39,12 @@ export class RepositoryModel extends ListModel<
   baseURI = '';
   indexKey = 'full_name' as const;
 
-  constructor(public owner = 'kaiyuanshe') {
+  constructor(public owner = '') {
     super();
-    this.baseURI = `orgs/${owner}/repos`;
+    this.baseURI = owner ? `orgs/${owner}/repos` : 'user/repos';
   }
+
+  organizationStore = new OrganizationModel();
 
   relation = {
     issues: memoize(async (URI: string) => {
@@ -93,9 +98,12 @@ export class RepositoryModel extends ListModel<
     per_page: number,
     { relation }: RepositoryFilter,
   ) {
+    const [kind, namespace] = this.baseURI.split('/'),
+      isUser = kind === 'user';
+
     const { body: list } = await this.client.get<Repository[]>(
       `${this.baseURI}?${buildURLData({
-        type: 'public',
+        type: isUser ? 'owner' : 'public',
         sort: 'pushed',
         page,
         per_page,
@@ -107,12 +115,17 @@ export class RepositoryModel extends ListModel<
         ...(await this.getOneRelation(item.full_name, relation)),
       })),
     );
-    const [_, organization] = this.baseURI.split('/');
+    if (!isUser) {
+      const { public_repos } = await this.organizationStore.getOne(namespace);
 
-    const { body } = await this.client.get<Organization>(
-      `orgs/${organization}`,
-    );
-    return { pageData, totalCount: body!.public_repos };
+      return { pageData, totalCount: public_repos };
+    }
+    const { public_repos, total_private_repos } = await userStore.getSession();
+
+    return {
+      pageData,
+      totalCount: public_repos + (total_private_repos || 0),
+    };
   }
 
   @toggle('downloading')
@@ -121,6 +134,29 @@ export class RepositoryModel extends ListModel<
       `repos/${this.owner}/${repository}/contents/${path}`,
     );
     return makeArray(body);
+  }
+
+  @toggle('uploading')
+  async updateContent(
+    path: string,
+    content: string | Blob,
+    message = `[update] ${path}`,
+    repository = this.currentOne.name,
+  ) {
+    try {
+      var [{ sha }] = await this.getContents(repository, path);
+    } catch {}
+
+    const { body } = await this.client.put<{
+      content: GitContent;
+      commit: components['schemas']['commit'];
+    }>(`repos/${this.owner}/${repository}/contents/${path}`, {
+      message,
+      content: await encodeBase64(content),
+      // @ts-ignore
+      sha,
+    });
+    return body!.content;
   }
 
   @toggle('downloading')
@@ -145,4 +181,4 @@ export class RepositoryModel extends ListModel<
   }
 }
 
-export default new RepositoryModel();
+export default new RepositoryModel('kaiyuanshe');

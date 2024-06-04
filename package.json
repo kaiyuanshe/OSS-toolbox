@@ -15,7 +15,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "file-type": "^19.0.0",
     "idea-react": "^2.0.0-rc.2",
-    "koajax": "^1.1.1",
+    "koajax": "^1.1.2",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "license-filter": "^0.2.4",
@@ -43,7 +43,7 @@
     "turndown-plugin-gfm": "^1.0.2",
     "web-utility": "^4.4.0",
     "webpack": "^5.91.0",
-    "yaml": "^2.4.2"
+    "yaml": "^2.4.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.24.6",
@@ -51,7 +51,7 @@
     "@babel/preset-react": "^7.24.6",
     "@octokit/openapi-types": "^22.2.0",
     "@types/lodash": "^4.17.4",
-    "@types/node": "^18.19.33",
+    "@types/node": "^18.19.34",
     "@types/react": "^18.3.3",
     "@types/turndown": "^5.0.4",
     "eslint": "^8.57.0",
@@ -60,7 +60,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.5",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.0",
     "typescript": "~5.4.5"
   },
   "prettier": {

@@ -18,7 +18,7 @@ export const getServerSideProps = compose(
   errorLogger,
   translator(i18n),
   async () => {
-    const list = await new RepositoryModel().getList({
+    const list = await new RepositoryModel('kaiyuanshe').getList({
       relation: ['languages'],
     });
     return { props: { list } };

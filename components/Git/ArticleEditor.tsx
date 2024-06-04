@@ -1,7 +1,8 @@
 import { readAs } from 'koajax';
 import { debounce } from 'lodash';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { DataObject } from 'mobx-restful';
 import {
   ChangeEvent,
   Component,
@@ -9,11 +10,12 @@ import {
   FormEvent,
   MouseEvent,
 } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitContent, RepositoryModel } from '../../models/Repository';
+import userStore from '../../models/User';
 import { ListField } from '../Form/JSONEditor';
 import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
@@ -27,9 +29,7 @@ export const fileType = {
 
 export const postMeta = /^---[\r\n]([\s\S]*?)[\r\n]---/;
 
-export interface PostMeta
-  extends Record<'title' | 'date', string>,
-    Partial<Record<string, any>> {
+export interface PostMeta extends Record<'title' | 'date', string>, DataObject {
   authors?: string[];
 }
 
@@ -40,13 +40,22 @@ export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
 
-  path = '';
+  @computed
+  get currentRepository() {
+    const [owner, name] = this.repository.split('/');
 
-  private Selector = createRef<PathSelect>();
-
-  get selector() {
-    return this.Selector.current!;
+    return { owner, name };
   }
+
+  @computed
+  get repositoryStore() {
+    const { owner } = this.currentRepository;
+
+    return new RepositoryModel(owner === userStore.session?.login ? '' : owner);
+  }
+
+  path = '';
+  URL = '';
 
   private Core = createRef<MarkdownEditor>();
 
@@ -54,10 +63,8 @@ export class ArticleEditor extends Component {
     return this.Core.current;
   }
 
-  URL = '';
-
   @observable
-  accessor meta: PostMeta | undefined = undefined;
+  accessor meta: PostMeta | null = null;
 
   @observable
   accessor copied = false;
@@ -72,8 +79,8 @@ export class ArticleEditor extends Component {
 
   async setPostMeta(raw?: string) {
     const meta: PostMeta = { authors: [], ...(raw ? YAML.parse(raw) : null) };
-    // @ts-ignore
-    const { login } = await getCurrentUser();
+
+    const { login } = await userStore.getSession();
 
     if (!meta.authors?.includes(login)) meta.authors?.push(login);
 
@@ -118,16 +125,15 @@ export class ArticleEditor extends Component {
   };
 
   reset = () => {
-    this.meta = undefined;
+    this.meta = null;
 
-    // if (this.selector) this.selector.reset();
     if (this.core) this.core.raw = '';
   };
 
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     if (value.trim()) return;
 
-    this.meta = undefined;
+    this.meta = null;
 
     if (this.core) this.core.raw = '';
   };
@@ -180,11 +186,11 @@ export class ArticleEditor extends Component {
   submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { repository, core } = this,
+    const { currentRepository, repositoryStore, core } = this,
       // @ts-ignore
       { message } = event.currentTarget.elements;
 
-    if (!core || !core.root) return;
+    if (!core?.root) return;
 
     const media: HTMLMediaElement[] = [].filter.call(
       core.root.querySelectorAll('img[src], audio[src], video[src]'),
@@ -198,28 +204,21 @@ export class ArticleEditor extends Component {
         /\.\w+$/,
         `/${uniqueID()}.${blob.type.split('/')[1]}`,
       );
-
-      const {
-        content: { download_url },
-        // @ts-ignore
-      }: any = await updateContent(
-        repository,
+      const { download_url } = await repositoryStore.updateContent(
         filePath,
-        '[Upload] from Git-Pager',
         blob,
+        '[Upload] from Git-Pager',
+        currentRepository.name,
       );
-
-      file.src = download_url;
+      file.src = download_url!;
     }
 
-    // @ts-ignore
-    await updateContent(
-      repository,
+    await repositoryStore.updateContent(
       this.path,
-      message.value.trim(),
       this.getContent() as string,
+      message.value.trim(),
+      currentRepository.name,
     );
-
     window.alert('Submitted');
   };
 
@@ -236,24 +235,25 @@ export class ArticleEditor extends Component {
   loadFile = async (path: string) => {
     const type = path.split('.').at(-1)?.toLowerCase();
 
-    if (!['md', 'markdown'].includes(type || '')) return;
+    if (!fileType.MarkDown.includes(type || '')) return;
 
-    const [owner, name] = this.repository.split('/');
-    const repositoryStore = new RepositoryModel(owner);
+    const { owner, name } = this.currentRepository;
 
-    const buffer = await repositoryStore.downloadRaw(path, name);
+    const buffer = await this.repositoryStore.downloadRaw(path, name),
+      { default_branch } = this.repositoryStore.currentOne;
 
-    this.setContent(path, new Blob([buffer]));
+    this.setContent(
+      `https://github.com/${owner}/${name}/blob/${default_branch}/${path}`,
+      new Blob([buffer]),
+    );
   };
 
   render() {
     const { repository, meta, copied } = this;
 
     return (
-      <Card
-        className="my-3"
-        body
-        as="form"
+      <Form
+        className="my-3 d-flex flex-column gap-3"
         onReset={this.reset}
         onSubmit={this.submit}
       >
@@ -272,42 +272,48 @@ export class ArticleEditor extends Component {
             <PathSelect repository={repository} onChange={this.loadFile} />
           )}
         </Form.Group>
-        <Form.Group className="row">
+        <Form.Group className="row align-items-center">
           <label className="col-sm-2 col-form-label">Commit message</label>
-          <span className="col-sm-7">
+          <Col sm={7}>
             <Form.Control as="textarea" name="message" required />
-          </span>
-          <span className="col-sm-3 d-flex justify-content-between align-items-center">
+          </Col>
+          <Col
+            sm={3}
+            className="d-flex flex-wrap gap-2 justify-content-around align-items-center"
+          >
             <Button type="submit">Commit</Button>
             <Button type="reset" variant="danger">
               Clear
             </Button>
-          </span>
+          </Col>
         </Form.Group>
 
         {meta && (
-          <div className="form-group">
+          <Form.Group>
             <label>Meta</label>
             <ListField
               value={meta}
-              onChange={({ target: { value } }: any) => (this.meta = value)}
+              onChange={({ currentTarget: { value } }) =>
+                (this.meta = value as PostMeta)
+              }
             />
-          </div>
+          </Form.Group>
         )}
-
         <Form.Group onInput={this.fixURL}>
-          <label>Content</label>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm float-end"
-            onClick={this.copyMarkdown}
-            onBlur={() => (this.copied = false)}
-          >
-            {copied ? '√' : ''} Copy MarkDown
-          </button>
+          <div className="d-flex justify-content-between align-items-center my-2">
+            <label>Content</label>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={this.copyMarkdown}
+              onBlur={() => (this.copied = false)}
+            >
+              {copied ? '√' : ''} Copy MarkDown
+            </Button>
+          </div>
           <MarkdownEditor ref={this.Core} />
         </Form.Group>
-      </Card>
+      </Form>
     );
   }
 }

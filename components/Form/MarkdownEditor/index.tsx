@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import * as MarkdownIME from 'markdown-ime';
 import { marked } from 'marked';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

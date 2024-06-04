@@ -29,6 +29,6 @@ export default safeAPI(async ({ method, url, headers, body }, response) => {
   const { mime } = (await fileTypeFromBuffer(buffer)) || {};
 
   response.status(status);
-  response.setHeader('Content-Type', mime || 'text/plain');
+  response.setHeader('Content-Type', mime || 'application/octet-stream');
   response.send(buffer);
 });

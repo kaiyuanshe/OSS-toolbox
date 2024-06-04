@@ -12,8 +12,9 @@ import repositoryStore, { RepositoryModel } from '../models/Repository';
 import { i18n } from '../models/Translation';
 
 export const getServerSideProps = compose(translator(i18n), async () => {
-  const list = await new RepositoryModel().getList({ relation: ['issues'] });
-
+  const list = await new RepositoryModel('kaiyuanshe').getList({
+    relation: ['issues'],
+  });
   return { props: { list } };
 });
 

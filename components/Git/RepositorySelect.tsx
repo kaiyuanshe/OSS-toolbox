@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { Component } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
-import { OrganizationModel } from '../../models/Organization';
 import { RepositoryModel } from '../../models/Repository';
+import userStore from '../../models/User';
 import { SelectInput } from '../Form/SelectInput';
 
 export type RepositoryIdentity = Record<'owner' | 'name', string>;
@@ -16,18 +16,18 @@ export interface RepositorySelectProps {
 
 @observer
 export class RepositorySelect extends Component<RepositorySelectProps> {
-  organizationStore = new OrganizationModel();
-
   @observable
   accessor owner = '';
 
   @computed
   get repositoryStore() {
-    return new RepositoryModel(this.owner);
+    const { owner } = this;
+
+    return new RepositoryModel(owner === userStore.session?.login ? '' : owner);
   }
 
   componentDidMount() {
-    this.organizationStore.getAll();
+    userStore.getSession();
   }
 
   #disposer = reaction(
@@ -40,10 +40,9 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
   }
 
   render() {
-    const organizations = this.organizationStore.allItems,
+    const { namespaces } = userStore,
       repositories = this.repositoryStore.allItems,
-      downloading =
-        this.organizationStore.downloading || this.repositoryStore.downloading;
+      downloading = userStore.downloading || this.repositoryStore.downloading;
 
     return (
       <Row xs={1} sm={2}>
@@ -51,8 +50,10 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
         <Col>
           <SelectInput
             className="form-control"
-            options={organizations.map(({ login }) => login)}
-            onBlur={({ currentTarget: { value } }) => (this.owner = value)}
+            options={namespaces}
+            onBlur={({ currentTarget: { value } }) =>
+              value.trim() && (this.owner = value)
+            }
           />
         </Col>
         <Col>
@@ -60,6 +61,7 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
             className="form-control"
             options={repositories.map(({ name }) => name!)}
             onBlur={({ currentTarget: { value } }) =>
+              value.trim() &&
               this.props.onChange({ owner: this.owner, name: value })
             }
           />
