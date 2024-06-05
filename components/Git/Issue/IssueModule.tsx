@@ -1,8 +1,8 @@
 import { Icon, text2color } from 'idea-react';
+import type { GitRepository } from 'mobx-github';
 import { FC, useState } from 'react';
 import { Badge, Card, Col, Collapse, Row } from 'react-bootstrap';
 
-import type { GitRepository } from '../../../models/Repository';
 import { IssueCard } from './Card';
 
 export const IssueModule: FC<GitRepository> = ({ name, language, issues }) => {

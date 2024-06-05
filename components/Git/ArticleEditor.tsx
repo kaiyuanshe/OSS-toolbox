@@ -1,6 +1,7 @@
 import { readAs } from 'koajax';
 import { debounce } from 'lodash';
 import { computed, observable } from 'mobx';
+import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { DataObject } from 'mobx-restful';
 import {
@@ -14,8 +15,7 @@ import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
-import { GitContent, RepositoryModel } from '../../models/Repository';
-import userStore from '../../models/User';
+import { GitRepositoryModel, userStore } from '../../models/Repository';
 import { ListField } from '../Form/JSONEditor';
 import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
@@ -51,7 +51,9 @@ export class ArticleEditor extends Component {
   get repositoryStore() {
     const { owner } = this.currentRepository;
 
-    return new RepositoryModel(owner === userStore.session?.login ? '' : owner);
+    return new GitRepositoryModel(
+      owner === userStore.session?.login ? '' : owner,
+    );
   }
 
   path = '';

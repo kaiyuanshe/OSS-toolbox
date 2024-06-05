@@ -5,23 +5,23 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   ClipboardEvent,
+  Component,
   createRef,
   DragEvent,
   FormEvent,
-  PureComponent,
 } from 'react';
 import { insertToCursor, parseDOM } from 'web-utility';
 
 import STYLE from './index.module.less';
-import TurnDown from './TurnDown';
+import turnDown from './TurnDown';
 
 export type EditorProps = { rules?: any };
 
 type InputHandler = (event: FormEvent) => void;
 
 @observer
-export class MarkdownEditor extends PureComponent<EditorProps> {
-  convertor = new TurnDown();
+export class MarkdownEditor extends Component<EditorProps> {
+  convertor = turnDown;
   private contentEditable = createRef<HTMLDivElement>();
 
   get root() {

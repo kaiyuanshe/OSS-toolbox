@@ -22,7 +22,15 @@ export type FieldChangeEvent = ChangeEvent<{ value: FieldProps['value'] }>;
 @observer
 export class ListField extends Component<FieldProps> {
   @observable
-  accessor innerValue = ListField.metaOf(this.props.value);
+  accessor innerValue = {} as DataMeta;
+
+  componentDidMount() {
+    this.innerValue = ListField.metaOf(this.props.value);
+  }
+
+  componentDidUpdate({ value }: Readonly<FieldProps>) {
+    if (value !== this.props.value) this.componentDidMount();
+  }
 
   static metaOf(value: any): DataMeta {
     if (value instanceof Array)

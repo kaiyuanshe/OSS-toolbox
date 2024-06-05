@@ -1,11 +1,11 @@
 import { Loading } from 'idea-react';
 import { computed, observable, reaction } from 'mobx';
+import { RepositoryModel } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
-import { RepositoryModel } from '../../models/Repository';
-import userStore from '../../models/User';
+import { userStore } from '../../models/Repository';
 import { SelectInput } from '../Form/SelectInput';
 
 export type RepositoryIdentity = Record<'owner' | 'name', string>;
@@ -50,7 +50,7 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
         <Col>
           <SelectInput
             className="form-control"
-            options={namespaces}
+            options={namespaces.map(({ login }) => login)}
             onBlur={({ currentTarget: { value } }) =>
               value.trim() && (this.owner = value)
             }

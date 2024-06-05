@@ -1,9 +1,9 @@
 import { Loading } from 'idea-react';
 import { observable } from 'mobx';
+import { GitContent, RepositoryModel } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 
-import { GitContent, RepositoryModel } from '../../models/Repository';
 import { SelectInput } from '../Form/SelectInput';
 
 export interface PathSelectProps {

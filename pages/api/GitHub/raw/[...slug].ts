@@ -1,6 +1,6 @@
 import { fileTypeFromBuffer } from 'file-type';
+import { githubClient } from 'mobx-github';
 
-import { githubClient } from '../../../../models/Base';
 import { safeAPI } from '../../core';
 
 export default safeAPI(async ({ method, url, headers, body }, response) => {
