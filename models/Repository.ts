@@ -1,112 +1,47 @@
-import { components } from '@octokit/openapi-types';
-import { memoize } from 'lodash';
-import { Filter, ListModel, toggle } from 'mobx-restful';
-import { averageOf, buildURLData } from 'web-utility';
+import { githubClient, RepositoryModel, UserModel } from 'mobx-github';
+import { parseCookie } from 'mobx-i18n';
+import { toggle } from 'mobx-restful';
 
-import { githubClient } from './Base';
+import { API_Host, isServer } from './Base';
 
-type Repository = components['schemas']['minimal-repository'];
-export type Organization = components['schemas']['organization-full'];
-export type Issue = components['schemas']['issue'];
+const GithubToken =
+  parseCookie(globalThis.document?.cookie || '').token ||
+  process.env.GITHUB_TOKEN;
 
-export interface GitRepository extends Repository {
-  issues: Issue[];
-  languages?: string[];
-}
+if (!isServer()) githubClient.baseURI = `${API_Host}/api/GitHub/`;
 
-export interface RepositoryFilter extends Filter<GitRepository> {
-  relation: (keyof RepositoryModel['relation'])[];
-}
+githubClient.use(({ request }, next) => {
+  if (GithubToken)
+    request.headers = {
+      authorization: `Bearer ${GithubToken}`,
+      ...request.headers,
+    };
+  return next();
+});
 
-type ReturnMap<T> = {
-  [K in keyof T]: T[K] extends (...data: any[]) => Promise<any>
-    ? Awaited<ReturnType<T[K]>>
-    : T[K] extends (...data: any[]) => any
-      ? ReturnType<T[K]>
-      : never;
-};
-
-export class RepositoryModel extends ListModel<
-  GitRepository,
-  RepositoryFilter
-> {
-  client = githubClient;
-  baseURI = 'orgs/kaiyuanshe/repos';
-  indexKey = 'full_name' as const;
-
-  relation = {
-    issues: memoize(async (URI: string) => {
-      const { body: issuesList } = await this.client.get<Issue[]>(
-        `repos/${URI}/issues?per_page=100`,
-      );
-      return issuesList!.filter(({ pull_request }) => !pull_request);
-    }),
-    languages: memoize(async (URI: string) => {
-      const { body: languageCount } = await this.client.get<
-        Record<string, number>
-      >(`repos/${URI}/languages`);
-
-      const languageAverage = averageOf(...Object.values(languageCount!));
-
-      const languageList = Object.entries(languageCount!)
-        .filter(([_, score]) => score >= languageAverage)
-        .sort(([_, a], [__, b]) => b - a);
-
-      return languageList.map(([name]) => name);
-    }),
-  };
-
-  async getOneRelation(
-    URI: string,
-    relation: RepositoryFilter['relation'] = [],
-  ) {
-    const relationData = await Promise.all(
-      relation.map(async key => {
-        const value = await this.relation[key](URI);
-        return [key, value];
-      }),
-    );
-    return Object.fromEntries(relationData) as ReturnMap<
-      RepositoryModel['relation']
-    >;
-  }
-
+export class GitRepositoryModel extends RepositoryModel {
   @toggle('downloading')
-  async getOne(URI: string, relation: RepositoryFilter['relation'] = []) {
-    const { body } = await this.client.get<Repository>(`repos/${URI}`);
-
-    return (this.currentOne = {
-      ...body!,
-      ...(await this.getOneRelation(URI, relation)),
-    });
-  }
-
-  async loadPage(
-    page: number,
-    per_page: number,
-    { relation }: RepositoryFilter,
+  async downloadRaw(
+    path: string,
+    repository = this.currentOne.name,
+    ref = this.currentOne.default_branch,
   ) {
-    const { body: list } = await this.client.get<Repository[]>(
-      `${this.baseURI}?${buildURLData({
-        type: 'public',
-        sort: 'pushed',
-        page,
-        per_page,
-      })}`,
-    );
-    const pageData = await Promise.all(
-      list!.map(async item => ({
-        ...item,
-        ...(await this.getOneRelation(item.full_name, relation)),
-      })),
-    );
-    const [_, organization] = this.baseURI.split('/');
+    const owner = this.owner || (await userStore.getSession()).login;
+    const identity = `${owner}/${repository}`;
 
-    const { body } = await this.client.get<Organization>(
-      `orgs/${organization}`,
+    if (!ref) {
+      const { default_branch } = await this.getOne(identity);
+
+      ref = default_branch;
+    }
+    const { body } = await this.client.get<ArrayBuffer>(
+      `raw/${identity}/${ref}/${path}`,
+      {},
+      { responseType: 'arraybuffer' },
     );
-    return { pageData, totalCount: body!.public_repos };
+    return body!;
   }
 }
 
-export default new RepositoryModel();
+export const userStore = new UserModel();
+export const repositoryStore = new GitRepositoryModel('kaiyuanshe');

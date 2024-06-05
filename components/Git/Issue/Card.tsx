@@ -1,9 +1,8 @@
 import { Icon, Nameplate, text2color } from 'idea-react';
 import { marked } from 'marked';
+import { Issue } from 'mobx-github';
 import { FC } from 'react';
 import { Badge, Card, CardProps, Stack } from 'react-bootstrap';
-
-import { Issue } from '../../../models/Repository';
 
 export type IssueCardProps = Issue & Omit<CardProps, 'id' | 'body'>;
 

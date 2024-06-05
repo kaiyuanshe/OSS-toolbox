@@ -26,7 +26,8 @@ const AppShell: FC<AppProps> = observer(({ Component, pageProps, router }) => (
 
     <MainNavigator />
 
-    {router.route.startsWith('/article/') ? (
+    {router.route.startsWith('/article/') &&
+    !router.route.startsWith('/article/editor') ? (
       <MDXLayout title={router.route.split('/').at(-1)}>
         <Component {...pageProps} />
       </MDXLayout>

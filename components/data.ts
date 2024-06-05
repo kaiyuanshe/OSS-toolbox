@@ -23,7 +23,10 @@ export const MainRoutes: () => Link[] = () => [
     path: '/polyfill',
   },
   { title: t('open_source_mirror'), path: 'http://mirror.kaiyuanshe.cn/' },
-  { title: 'Git Pager', path: 'https://git-pager.vercel.app/' },
+  {
+    title: 'Git Pager',
+    path: '/article/editor',
+  },
   {
     title: t('source_code'),
     path: 'https://github.com/kaiyuanshe/OSS-toolbox',

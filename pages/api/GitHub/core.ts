@@ -1,11 +1,13 @@
-import { githubClient } from '../../../models/Base';
+import { githubClient } from 'mobx-github';
+import { githubOAuth2 } from 'next-ssr-middleware';
+
 import { safeAPI } from '../core';
 
 export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
   safeAPI(async ({ method, url, headers, body }, response) => {
     delete headers.host;
 
-    const path = url!.slice(`/api/github/`.length);
+    const path = url!.slice(`/api/GitHub/`.length);
 
     const { status, body: data } = await githubClient.request<T>({
       // @ts-ignore
@@ -19,3 +21,12 @@ export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
     response.status(status);
     response.send(dataFilter?.(path, data as T) || data);
   });
+
+const client_id = process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID!,
+  client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!;
+
+export const githubOAuth = githubOAuth2({
+  client_id,
+  client_secret,
+  scopes: ['user', 'repo'],
+});

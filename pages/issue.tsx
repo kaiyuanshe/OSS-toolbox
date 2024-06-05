@@ -1,4 +1,5 @@
 import { Loading } from 'idea-react';
+import { RepositoryModel } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { ScrollList } from 'mobx-restful-table';
 import { InferGetServerSidePropsType } from 'next';
@@ -8,12 +9,13 @@ import { Breadcrumb, Container, Row } from 'react-bootstrap';
 
 import { IssueModule } from '../components/Git/Issue/IssueModule';
 import { PageHead } from '../components/PageHead';
-import repositoryStore, { RepositoryModel } from '../models/Repository';
+import { repositoryStore } from '../models/Repository';
 import { i18n } from '../models/Translation';
 
 export const getServerSideProps = compose(translator(i18n), async () => {
-  const list = await new RepositoryModel().getList({ relation: ['issues'] });
-
+  const list = await new RepositoryModel('kaiyuanshe').getList({
+    relation: ['issues'],
+  });
   return { props: { list } };
 });
 
