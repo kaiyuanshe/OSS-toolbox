@@ -1,4 +1,9 @@
-import { githubClient, RepositoryModel, UserModel } from 'mobx-github';
+import {
+  githubClient,
+  RepositoryFilter,
+  RepositoryModel,
+  UserModel,
+} from 'mobx-github';
 import { parseCookie } from 'mobx-i18n';
 import { toggle } from 'mobx-restful';
 
@@ -42,7 +47,11 @@ export class GitRepositoryModel extends RepositoryModel {
     return body!;
   }
 
-  async loadNewPage(pageIndex: number, pageSize: number, filter: F) {
+  async loadNewPage(
+    pageIndex: number,
+    pageSize: number,
+    filter: RepositoryFilter,
+  ) {
     const { pageData, totalCount } = await this.loadPage(
       pageIndex,
       pageSize,
