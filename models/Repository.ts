@@ -41,6 +41,28 @@ export class GitRepositoryModel extends RepositoryModel {
     );
     return body!;
   }
+
+  async loadNewPage(pageIndex: number, pageSize: number, filter: F) {
+    const { pageData, totalCount } = await this.loadPage(
+      pageIndex,
+      pageSize,
+      filter,
+    );
+    this.pageSize = pageSize;
+
+    const list = [...this.pageList];
+    list[pageIndex - 1] = pageData;
+    this.pageList = list;
+
+    this.totalCount =
+      totalCount != null
+        ? isNaN(totalCount) || totalCount < 0
+          ? Infinity
+          : totalCount
+        : Infinity;
+
+    return { pageData, totalCount };
+  }
 }
 
 export const userStore = new UserModel();
