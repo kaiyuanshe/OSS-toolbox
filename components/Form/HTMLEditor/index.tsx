@@ -10,11 +10,6 @@ import {
 } from 'react-bootstrap-editor';
 import { insertToCursor, parseDOM } from 'web-utility';
 
-import fileStore from '../models/Base/File';
-
-ImageTool.prototype.save = blob =>
-  fileStore.upload(new File([blob], uniqueID()));
-
 const ExcludeTools = [IFrameTool, AudioTool, VideoTool];
 
 const CustomTools = OriginalTools.filter(
