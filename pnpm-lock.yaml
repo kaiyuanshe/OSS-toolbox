@@ -92,6 +92,9 @@ importers:
       react-bootstrap:
         specifier: ^2.10.2
         version: 2.10.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-bootstrap-editor:
+        specifier: ^2.0.4
+        version: 2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -1827,6 +1830,9 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
+  browser-fs-access@0.35.0:
+    resolution: {integrity: sha512-sLoadumpRfsjprP8XzVjpQc0jK8yqHBx0PtUTGYj2fftT+P/t+uyDAQdMgGAPKD011in/O+YYGh7fIs0oG/viw==}
+
   browserslist@4.23.0:
     resolution: {integrity: sha512-QW8HiM1shhT2GuzkvklfjcKDiWFXHOeFCIA/huJPwHsslwcydgk7X+z2zXpEijP98UCY7HbubZt5J2Zgvf0CaQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
@@ -2089,6 +2095,9 @@ packages:
 
   editorjs-html@3.4.3:
     resolution: {integrity: sha512-HMqQ3BCE98uhSpJsbfH0c3CoMctUMCHlap2Eq/7/VjaHas+g3IJqyf+ERtMByoQCzvcW22ISYaZEeE7rGkd8Xg==}
+
+  edkit@1.2.1:
+    resolution: {integrity: sha512-Mqixc9JdCC7oFFeQ+Vn8GmK3jaGkI7jEGighQQt3PZmKKXmlMovwRoMXFV2glev7pyiA48GP89sBXapZcQhgXQ==}
 
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
@@ -3106,6 +3115,11 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
+  marked@13.0.1:
+    resolution: {integrity: sha512-7kBohS6GrZKvCsNXZyVVXSW7/hGBHe49ng99YPkDCckSUrrG7MSFLCexsRxptzOmyW2eT5dySh4Md1V6my52fA==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
   marked@4.3.0:
     resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
@@ -3755,6 +3769,12 @@ packages:
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
+
+  react-bootstrap-editor@2.0.4:
+    resolution: {integrity: sha512-hKJMhCriJ1/V4QWq+FWccxYCtq6IYYIr79wBsyWlXSmwHypms79CQGNGL78F19MWQQn613AvltBMWaxwi7DEmw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
 
   react-bootstrap@2.10.2:
     resolution: {integrity: sha512-UvB7mRqQjivdZNxJNEA2yOQRB7L9N43nBnKc33K47+cH90/ujmnMwatTCwQLu83gLhrzAl8fsa6Lqig/KLghaA==}
@@ -6645,6 +6665,8 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
+  browser-fs-access@0.35.0: {}
+
   browserslist@4.23.0:
     dependencies:
       caniuse-lite: 1.0.30001625
@@ -6908,6 +6930,19 @@ snapshots:
       safe-buffer: 5.2.1
 
   editorjs-html@3.4.3: {}
+
+  edkit@1.2.1(typescript@5.4.5):
+    dependencies:
+      '@swc/helpers': 0.5.11
+      '@types/turndown': 5.0.4
+      browser-fs-access: 0.35.0
+      marked: 13.0.1
+      regenerator-runtime: 0.14.1
+      turndown: 7.2.0
+      turndown-plugin-gfm: 1.0.2
+      web-utility: 4.4.0(typescript@5.4.5)
+    transitivePeerDependencies:
+      - typescript
 
   ejs@3.1.10:
     dependencies:
@@ -8174,6 +8209,8 @@ snapshots:
 
   marked@12.0.2: {}
 
+  marked@13.0.1: {}
+
   marked@4.3.0: {}
 
   mdast-util-find-and-replace@3.0.1:
@@ -9093,6 +9130,19 @@ snapshots:
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
+
+  react-bootstrap-editor@2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5):
+    dependencies:
+      '@swc/helpers': 0.5.11
+      edkit: 1.2.1(typescript@5.4.5)
+      mobx: 6.12.3
+      mobx-react: 9.1.1(mobx@6.12.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      web-utility: 4.4.0(typescript@5.4.5)
+    transitivePeerDependencies:
+      - react-native
+      - typescript
 
   react-bootstrap@2.10.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
