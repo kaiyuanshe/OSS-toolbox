@@ -8,7 +8,7 @@ import {
   OriginalTools,
   VideoTool,
 } from 'react-bootstrap-editor';
-import { insertToCursor, parseDOM } from 'web-utility';
+import { Constructor } from 'web-utility';
 
 const ExcludeTools = [IFrameTool, AudioTool, VideoTool];
 
