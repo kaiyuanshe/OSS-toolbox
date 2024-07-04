@@ -16,6 +16,7 @@ import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
+import HTMLEditor from '../Form/HTMLEditor';
 import { ListField } from '../Form/JSONEditor';
 import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
@@ -59,7 +60,7 @@ export class ArticleEditor extends Component {
   path = '';
   URL = '';
 
-  private Core = createRef<MarkdownEditor>();
+  private Core = createRef<HTMLEditor>();
 
   get core() {
     return this.Core.current;
@@ -313,7 +314,7 @@ export class ArticleEditor extends Component {
               {copied ? '√' : ''} Copy MarkDown
             </Button>
           </div>
-          <MarkdownEditor ref={this.Core} />
+          <HTMLEditor ref={this.Core} />
         </Form.Group>
       </Form>
     );
