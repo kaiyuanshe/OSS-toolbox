@@ -314,7 +314,7 @@ export class ArticleEditor extends Component {
               {copied ? '√' : ''} Copy MarkDown
             </Button>
           </div>
-          <HTMLEditor ref={this.Core} />
+          <HTMLEditor defaultValue={''} onChange={this.Core.current} />
         </Form.Group>
       </Form>
     );
