@@ -4,6 +4,7 @@ import { computed, observable } from 'mobx';
 import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { DataObject } from 'mobx-restful';
+import dynamic from 'next/dynamic';
 import {
   ChangeEvent,
   Component,
@@ -16,11 +17,12 @@ import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
-import HTMLEditor from '../Form/HTMLEditor';
 import { ListField } from '../Form/JSONEditor';
 import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
+
+const HTMLEditor = dynamic(() => import('../Form/HTMLEditor'), { ssr: false });
 
 export const fileType = {
   MarkDown: ['md', 'markdown'],
@@ -59,12 +61,6 @@ export class ArticleEditor extends Component {
 
   path = '';
   URL = '';
-
-  private Core = createRef<HTMLEditor>();
-
-  get core() {
-    return this.Core.current;
-  }
 
   @observable
   accessor meta: PostMeta | null = null;
@@ -314,7 +310,7 @@ export class ArticleEditor extends Component {
               {copied ? '√' : ''} Copy MarkDown
             </Button>
           </div>
-          <HTMLEditor defaultValue={''} onChange={this.Core.current} />
+          <HTMLEditor defaultValue={''} />
         </Form.Group>
       </Form>
     );
