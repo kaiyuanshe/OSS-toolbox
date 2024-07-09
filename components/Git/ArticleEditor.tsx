@@ -5,20 +5,13 @@ import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { DataObject } from 'mobx-restful';
 import dynamic from 'next/dynamic';
-import {
-  ChangeEvent,
-  Component,
-  createRef,
-  FormEvent,
-  MouseEvent,
-} from 'react';
+import { ChangeEvent, Component, FormEvent, MouseEvent } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
 import { ListField } from '../Form/JSONEditor';
-import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
 
@@ -42,6 +35,7 @@ export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
+  accessor core = {};
 
   @computed
   get currentRepository() {
