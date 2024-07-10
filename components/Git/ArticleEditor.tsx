@@ -35,7 +35,7 @@ export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
-  accessor core = {};
+  accessor editorContent = '';
 
   @computed
   get currentRepository() {
@@ -114,13 +114,13 @@ export class ArticleEditor extends Component {
       if (meta[1]) this.setPostMeta(meta[1]);
     }
 
-    if (this.core) this.core.raw = content;
+    if (this.editorContent) this.editorContent = content;
   };
 
   reset = () => {
     this.meta = null;
 
-    if (this.core) this.core.raw = '';
+    if (this.editorContent) this.editorContent = '';
   };
 
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +128,7 @@ export class ArticleEditor extends Component {
 
     this.meta = null;
 
-    if (this.core) this.core.raw = '';
+    if (this.editorContent) this.editorContent = '';
   };
 
   fixURL = debounce(() => {
