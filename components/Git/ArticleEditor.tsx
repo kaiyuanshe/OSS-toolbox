@@ -157,14 +157,14 @@ export class ArticleEditor extends Component {
 
   getContent() {
     const type = this.URL.split('.').slice(-1)[0],
-      { meta, core } = this;
+      { meta, editorContent } = this;
 
     if (fileType.JSON.includes(type)) return JSON.stringify(meta);
 
     if (fileType.YAML.includes(type)) return YAML.stringify(meta);
 
-    if (fileType.MarkDown.includes(type) && core) {
-      if (!meta) return core.raw;
+    if (fileType.MarkDown.includes(type) && editorContent) {
+      if (!meta) return editorContent;
       // @ts-ignore
       meta.updated = formatDate();
 
@@ -172,18 +172,18 @@ export class ArticleEditor extends Component {
   ${YAML.stringify(meta)}
   ---
   
-  ${core.raw}`;
+  ${editorContent}`;
     }
   }
 
   submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { currentRepository, repositoryStore, core } = this,
+    const { currentRepository, repositoryStore, editorContent } = this,
       // @ts-ignore
       { message } = event.currentTarget.elements;
 
-    if (!core?.root) return;
+    if (!editorContent) return;
 
     const media: HTMLMediaElement[] = [].filter.call(
       core.root.querySelectorAll('img[src], audio[src], video[src]'),
@@ -218,8 +218,8 @@ export class ArticleEditor extends Component {
   copyMarkdown = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (this.core) {
-      await navigator.clipboard.writeText(this.core.raw);
+    if (this.editorContent) {
+      await navigator.clipboard.writeText(this.editorContent);
 
       this.copied = true;
     }
@@ -304,7 +304,7 @@ export class ArticleEditor extends Component {
               {copied ? '√' : ''} Copy MarkDown
             </Button>
           </div>
-          <HTMLEditor defaultValue={''} />
+          <HTMLEditor defaultValue={this.editorContent} />
         </Form.Group>
       </Form>
     );
