@@ -120,7 +120,7 @@ export class ArticleEditor extends Component {
   reset = () => {
     this.meta = null;
 
-    if (this.editorContent) this.editorContent = '';
+    this.editorContent = '';
   };
 
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -128,17 +128,16 @@ export class ArticleEditor extends Component {
 
     this.meta = null;
 
-    if (this.editorContent) this.editorContent = '';
+    this.editorContent = '';
   };
 
   fixURL = debounce(() => {
     const { repository } = this,
-      pageURL = window.location.href.split('?')[0];
+      pageURL = window.location.href.split('?')[0],
+      root = document.querySelector('div[contenteditable]');
 
-    if (this.core && this.core.root)
-      for (let element of this.core.root.querySelectorAll<HyperLink>(
-        '[href], [src]',
-      )) {
+    if (root)
+      for (let element of root.querySelectorAll<HyperLink>('[href], [src]')) {
         let URI =
           element instanceof HTMLAnchorElement ? element.href : element.src;
 
@@ -185,8 +184,9 @@ export class ArticleEditor extends Component {
 
     if (!editorContent) return;
 
+    const root = document.querySelector('div[contenteditable]');
     const media: HTMLMediaElement[] = [].filter.call(
-      core.root.querySelectorAll('img[src], audio[src], video[src]'),
+      root!.querySelectorAll('img[src], audio[src], video[src]'),
       ({ src }) => new URL(src).protocol === 'blob:',
     );
 
