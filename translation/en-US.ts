@@ -108,4 +108,14 @@ export default {
   range_file: 'file',
   range_module: 'module',
   last_step: 'back',
+
+  // git pager
+  repository: 'repository',
+  filePath: 'filePath',
+  commitMessage: 'commit Message',
+  commit: 'commit',
+  clear: 'clear',
+  meta: 'meta',
+  content: 'content',
+  copyMarkDown: 'copy Markdown',
 } as const;

@@ -105,4 +105,14 @@ export default {
   range_file: '文件',
   range_module: '模块',
   last_step: '上一步',
+
+  // git pager
+  repository: '代码仓库',
+  filePath: '文件路径',
+  commitMessage: '提交信息',
+  commit: '提交',
+  clear: '清空',
+  meta: '元数据',
+  content: '内容',
+  copyMarkDown: '复制 Markdown',
 } as const;

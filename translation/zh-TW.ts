@@ -105,4 +105,14 @@ export default {
   range_file: '檔案',
   range_module: '模組',
   last_step: '上一步',
+
+  // git pager
+  repository: '程式碼倉庫',
+  filePath: '檔案路徑',
+  commitMessage: '提交訊息',
+  commit: '提交',
+  clear: '清空',
+  meta: '詮釋資料',
+  content: '内容',
+  copyMarkDown: '複製 Markdown',
 } as const;

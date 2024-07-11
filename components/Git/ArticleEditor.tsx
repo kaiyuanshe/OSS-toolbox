@@ -11,10 +11,12 @@ import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
+import { i18n } from '../../models/Translation';
 import { ListField } from '../Form/JSONEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
 
+const { t } = i18n;
 const HTMLEditor = dynamic(() => import('../Form/HTMLEditor'), { ssr: false });
 
 export const fileType = {
@@ -119,7 +121,6 @@ export class ArticleEditor extends Component {
 
   reset = () => {
     this.meta = null;
-
     this.editorContent = '';
   };
 
@@ -249,7 +250,7 @@ export class ArticleEditor extends Component {
         onSubmit={this.submit}
       >
         <Form.Group className="row">
-          <label className="col-sm-2 col-form-label">Repository</label>
+          <label className="col-sm-2 col-form-label">{t('repository')}</label>
           <RepositorySelect
             onChange={({ owner, name }) =>
               (this.repository = `${owner}/${name}`)
@@ -257,14 +258,16 @@ export class ArticleEditor extends Component {
           />
         </Form.Group>
         <Form.Group className="row">
-          <label className="col-sm-2 col-form-label">File path</label>
+          <label className="col-sm-2 col-form-label">{t('filePath')}</label>
 
           {repository && (
             <PathSelect repository={repository} onChange={this.loadFile} />
           )}
         </Form.Group>
         <Form.Group className="row align-items-center">
-          <label className="col-sm-2 col-form-label">Commit message</label>
+          <label className="col-sm-2 col-form-label">
+            {t('commitMessage')}
+          </label>
           <Col sm={7}>
             <Form.Control as="textarea" name="message" required />
           </Col>
@@ -272,16 +275,16 @@ export class ArticleEditor extends Component {
             sm={3}
             className="d-flex flex-wrap gap-2 justify-content-around align-items-center"
           >
-            <Button type="submit">Commit</Button>
+            <Button type="submit">{t('commit')}</Button>
             <Button type="reset" variant="danger">
-              Clear
+              {t('clear')}
             </Button>
           </Col>
         </Form.Group>
 
         {meta && (
           <Form.Group>
-            <label>Meta</label>
+            <label>{t('meta')}</label>
             <ListField
               value={meta}
               onChange={({ currentTarget: { value } }) =>
@@ -292,14 +295,14 @@ export class ArticleEditor extends Component {
         )}
         <Form.Group onInput={this.fixURL}>
           <div className="d-flex justify-content-between align-items-center my-2">
-            <label>Content</label>
+            <label>{t('content')}</label>
             <Button
               variant="secondary"
               size="sm"
               onClick={this.copyMarkdown}
               onBlur={() => (this.copied = false)}
             >
-              {copied ? '√' : ''} Copy MarkDown
+              {copied ? '√' : ''} {t('copyMarkDown')}
             </Button>
           </div>
           <HTMLEditor
