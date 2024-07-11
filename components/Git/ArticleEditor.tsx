@@ -35,7 +35,7 @@ export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
-  accessor editorContent = '';
+  editorContent = '';
 
   @computed
   get currentRepository() {
@@ -114,7 +114,7 @@ export class ArticleEditor extends Component {
       if (meta[1]) this.setPostMeta(meta[1]);
     }
 
-    if (this.editorContent) this.editorContent = content;
+    this.editorContent = content;
   };
 
   reset = () => {
@@ -304,7 +304,10 @@ export class ArticleEditor extends Component {
               {copied ? '√' : ''} Copy MarkDown
             </Button>
           </div>
-          <HTMLEditor defaultValue={this.editorContent} />
+          <HTMLEditor
+            defaultValue={this.editorContent}
+            onChange={value => (this.editorContent = value)}
+          />
         </Form.Group>
       </Form>
     );
