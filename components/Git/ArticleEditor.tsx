@@ -126,9 +126,7 @@ export class ArticleEditor extends Component {
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     if (value.trim()) return;
 
-    this.meta = null;
-
-    this.editorContent = '';
+    this.reset();
   };
 
   fixURL = debounce(() => {
