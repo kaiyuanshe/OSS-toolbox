@@ -108,4 +108,9 @@ export default {
   range_file: 'file',
   range_module: 'module',
   last_step: 'back',
+
+  //polyfill page
+  selectCompatibleBrowser: 'select Compatible Browser',
+  features: 'select features',
+  searchFeature: 'search Feature',
 } as const;

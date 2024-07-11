@@ -105,4 +105,9 @@ export default {
   range_file: '文件',
   range_module: '模块',
   last_step: '上一步',
+
+  //polyfill page
+  selectCompatibleBrowser: '选择兼容浏览器',
+  features: '选择功能组件',
+  searchFeature: '搜索功能组件',
 } as const;
