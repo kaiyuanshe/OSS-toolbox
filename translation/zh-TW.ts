@@ -107,7 +107,7 @@ export default {
   last_step: '上一步',
 
   //polyfill page
-  selectCompatibleBrowsers: '選擇相容瀏覽器',
+  selectCompatibleBrowser: '選擇相容瀏覽器',
   features: '選擇功能模組',
   searchFeature: '搜尋功能模組',
 } as const;
