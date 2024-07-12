@@ -108,6 +108,6 @@ export default {
 
   //Polyfill page
   select_compatible_browser: '选择兼容浏览器',
-  features: '选择特性',
+  select_features: '选择特性',
   search_feature: '搜索特性',
 } as const;
