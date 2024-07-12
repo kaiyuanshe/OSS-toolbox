@@ -243,7 +243,7 @@ export class ArticleEditor extends Component {
           />
         </Form.Group>
         <Form.Group className="row">
-          <label className="col-sm-2 col-form-label">{t('filePath')}</label>
+          <label className="col-sm-2 col-form-label">{t('file_path')}</label>
 
           {repository && (
             <PathSelect repository={repository} onChange={this.loadFile} />
@@ -251,7 +251,7 @@ export class ArticleEditor extends Component {
         </Form.Group>
         <Form.Group className="row align-items-center">
           <label className="col-sm-2 col-form-label">
-            {t('commitMessage')}
+            {t('commit_message')}
           </label>
           <Col sm={7}>
             <Form.Control as="textarea" name="message" required />

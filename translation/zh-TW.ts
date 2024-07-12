@@ -108,11 +108,11 @@ export default {
 
   // git pager
   repository: '程式碼倉庫',
-  filePath: '檔案路徑',
-  commitMessage: '提交訊息',
+  file_path: '檔案路徑',
+  commit_message: '提交訊息',
   commit: '提交',
   clear: '清空',
   meta: '詮釋資料',
   content: '内容',
-  copyMarkDown: '複製 Markdown',
+  copy_MarkDown: '複製 Markdown',
 } as const;

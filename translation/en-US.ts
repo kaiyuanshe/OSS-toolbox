@@ -111,11 +111,11 @@ export default {
 
   // git pager
   repository: 'repository',
-  filePath: 'filePath',
-  commitMessage: 'commit Message',
+  file_path: 'filePath',
+  commit_message: 'commit Message',
   commit: 'commit',
   clear: 'clear',
   meta: 'meta',
   content: 'content',
-  copyMarkDown: 'copy Markdown',
+  copy_MarkDown: 'copy Markdown',
 } as const;
