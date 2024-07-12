@@ -118,4 +118,9 @@ export default {
   meta: 'meta',
   content: 'content',
   copy_MarkDown: 'copy Markdown',
+
+  //Polyfill page
+  select_compatible_browser: 'select Compatible Browser',
+  select_features: 'select features',
+  search_feature: 'search Feature',
 } as const;

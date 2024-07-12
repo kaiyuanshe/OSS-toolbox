@@ -58,7 +58,9 @@ export default class PolyfillPage extends Component {
         <header className="d-flex justify-content-around align-items-center">
           <h1>{t('Web_polyfill_CDN')}</h1>
 
-          <DropdownButton title={textJoin(t('examples'), currentUA)}>
+          <DropdownButton
+            title={textJoin(t('select_compatible_browser'), currentUA)}
+          >
             {Object.entries(UserAgent).map(([name, value]) => (
               <Dropdown.Item
                 key={name}
@@ -73,10 +75,10 @@ export default class PolyfillPage extends Component {
 
         <Accordion>
           <Accordion.Item eventKey="0">
-            <Accordion.Header>features</Accordion.Header>
+            <Accordion.Header>{t('select_features')}</Accordion.Header>
             <Accordion.Body>
               <Tree
-                filterPlaceholder="features"
+                filterPlaceholder={t('search_feature')}
                 filter
                 selectionMode="checkbox"
                 value={options}

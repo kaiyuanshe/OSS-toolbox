@@ -115,4 +115,9 @@ export default {
   meta: '元数据',
   content: '内容',
   copy_MarkDown: '复制 Markdown',
+
+  //Polyfill page
+  select_compatible_browser: '选择兼容浏览器',
+  select_features: '选择特性',
+  search_feature: '搜索特性',
 } as const;

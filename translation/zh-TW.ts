@@ -115,4 +115,9 @@ export default {
   meta: '詮釋資料',
   content: '内容',
   copy_MarkDown: '複製 Markdown',
+
+  //Polyfill page
+  select_compatible_browser: '選擇相容瀏覽器',
+  select_features: '選擇特性',
+  search_feature: '搜尋特性',
 } as const;
