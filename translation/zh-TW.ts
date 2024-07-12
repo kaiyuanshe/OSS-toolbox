@@ -106,6 +106,16 @@ export default {
   range_module: '模組',
   last_step: '上一步',
 
+  // Git pager
+  repository: '程式碼倉庫',
+  file_path: '檔案路徑',
+  commit_message: '提交訊息',
+  commit: '提交',
+  clear: '清空',
+  meta: '詮釋資料',
+  content: '内容',
+  copy_MarkDown: '複製 Markdown',
+
   //Polyfill page
   select_compatible_browser: '選擇相容瀏覽器',
   select_features: '選擇特性',

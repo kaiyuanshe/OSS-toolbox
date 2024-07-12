@@ -109,6 +109,16 @@ export default {
   range_module: 'module',
   last_step: 'back',
 
+  // Git pager
+  repository: 'repository',
+  file_path: 'file path',
+  commit_message: 'commit message',
+  commit: 'commit',
+  clear: 'clear',
+  meta: 'meta',
+  content: 'content',
+  copy_MarkDown: 'copy Markdown',
+
   //Polyfill page
   select_compatible_browser: 'select Compatible Browser',
   select_features: 'select features',

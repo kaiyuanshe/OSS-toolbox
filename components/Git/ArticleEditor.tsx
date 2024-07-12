@@ -4,22 +4,20 @@ import { computed, observable } from 'mobx';
 import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { DataObject } from 'mobx-restful';
-import {
-  ChangeEvent,
-  Component,
-  createRef,
-  FormEvent,
-  MouseEvent,
-} from 'react';
+import dynamic from 'next/dynamic';
+import { ChangeEvent, Component, FormEvent, MouseEvent } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
+import { i18n } from '../../models/Translation';
 import { ListField } from '../Form/JSONEditor';
-import { MarkdownEditor } from '../Form/MarkdownEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
+
+const { t } = i18n;
+const HTMLEditor = dynamic(() => import('../Form/HTMLEditor'), { ssr: false });
 
 export const fileType = {
   MarkDown: ['md', 'markdown'],
@@ -39,6 +37,7 @@ export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
+  editorContent = '';
 
   @computed
   get currentRepository() {
@@ -59,17 +58,8 @@ export class ArticleEditor extends Component {
   path = '';
   URL = '';
 
-  private Core = createRef<MarkdownEditor>();
-
-  get core() {
-    return this.Core.current;
-  }
-
   @observable
   accessor meta: PostMeta | null = null;
-
-  @observable
-  accessor copied = false;
 
   static contentFilter({ type, name }: GitContent) {
     return (
@@ -123,31 +113,25 @@ export class ArticleEditor extends Component {
       if (meta[1]) this.setPostMeta(meta[1]);
     }
 
-    if (this.core) this.core.raw = content;
+    this.editorContent = content;
   };
 
   reset = () => {
     this.meta = null;
-
-    if (this.core) this.core.raw = '';
+    this.editorContent = '';
   };
 
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (value.trim()) return;
-
-    this.meta = null;
-
-    if (this.core) this.core.raw = '';
+    if (!value.trim()) this.reset();
   };
 
   fixURL = debounce(() => {
     const { repository } = this,
-      pageURL = window.location.href.split('?')[0];
+      pageURL = window.location.href.split('?')[0],
+      root = document.querySelector('div[contenteditable]');
 
-    if (this.core && this.core.root)
-      for (let element of this.core.root.querySelectorAll<HyperLink>(
-        '[href], [src]',
-      )) {
+    if (root)
+      for (let element of root.querySelectorAll<HyperLink>('[href], [src]')) {
         let URI =
           element instanceof HTMLAnchorElement ? element.href : element.src;
 
@@ -166,14 +150,14 @@ export class ArticleEditor extends Component {
 
   getContent() {
     const type = this.URL.split('.').slice(-1)[0],
-      { meta, core } = this;
+      { meta, editorContent } = this;
 
     if (fileType.JSON.includes(type)) return JSON.stringify(meta);
 
     if (fileType.YAML.includes(type)) return YAML.stringify(meta);
 
-    if (fileType.MarkDown.includes(type) && core) {
-      if (!meta) return core.raw;
+    if (fileType.MarkDown.includes(type) && editorContent) {
+      if (!meta) return editorContent;
       // @ts-ignore
       meta.updated = formatDate();
 
@@ -181,21 +165,22 @@ export class ArticleEditor extends Component {
   ${YAML.stringify(meta)}
   ---
   
-  ${core.raw}`;
+  ${editorContent}`;
     }
   }
 
   submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { currentRepository, repositoryStore, core } = this,
+    const { currentRepository, repositoryStore, editorContent } = this,
       // @ts-ignore
       { message } = event.currentTarget.elements;
 
-    if (!core?.root) return;
+    if (!editorContent) return;
 
+    const root = document.querySelector('div[contenteditable]');
     const media: HTMLMediaElement[] = [].filter.call(
-      core.root.querySelectorAll('img[src], audio[src], video[src]'),
+      root!.querySelectorAll('img[src], audio[src], video[src]'),
       ({ src }) => new URL(src).protocol === 'blob:',
     );
 
@@ -224,16 +209,6 @@ export class ArticleEditor extends Component {
     window.alert('Submitted');
   };
 
-  copyMarkdown = async (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    if (this.core) {
-      await navigator.clipboard.writeText(this.core.raw);
-
-      this.copied = true;
-    }
-  };
-
   loadFile = async (path: string) => {
     const type = path.split('.').at(-1)?.toLowerCase();
 
@@ -251,7 +226,7 @@ export class ArticleEditor extends Component {
   };
 
   render() {
-    const { repository, meta, copied } = this;
+    const { repository, meta } = this;
 
     return (
       <Form
@@ -260,7 +235,7 @@ export class ArticleEditor extends Component {
         onSubmit={this.submit}
       >
         <Form.Group className="row">
-          <label className="col-sm-2 col-form-label">Repository</label>
+          <label className="col-sm-2 col-form-label">{t('repository')}</label>
           <RepositorySelect
             onChange={({ owner, name }) =>
               (this.repository = `${owner}/${name}`)
@@ -268,14 +243,16 @@ export class ArticleEditor extends Component {
           />
         </Form.Group>
         <Form.Group className="row">
-          <label className="col-sm-2 col-form-label">File path</label>
+          <label className="col-sm-2 col-form-label">{t('file_path')}</label>
 
           {repository && (
             <PathSelect repository={repository} onChange={this.loadFile} />
           )}
         </Form.Group>
         <Form.Group className="row align-items-center">
-          <label className="col-sm-2 col-form-label">Commit message</label>
+          <label className="col-sm-2 col-form-label">
+            {t('commit_message')}
+          </label>
           <Col sm={7}>
             <Form.Control as="textarea" name="message" required />
           </Col>
@@ -283,16 +260,16 @@ export class ArticleEditor extends Component {
             sm={3}
             className="d-flex flex-wrap gap-2 justify-content-around align-items-center"
           >
-            <Button type="submit">Commit</Button>
+            <Button type="submit">{t('commit')}</Button>
             <Button type="reset" variant="danger">
-              Clear
+              {t('clear')}
             </Button>
           </Col>
         </Form.Group>
 
         {meta && (
           <Form.Group>
-            <label>Meta</label>
+            <label>{t('meta')}</label>
             <ListField
               value={meta}
               onChange={({ currentTarget: { value } }) =>
@@ -303,17 +280,12 @@ export class ArticleEditor extends Component {
         )}
         <Form.Group onInput={this.fixURL}>
           <div className="d-flex justify-content-between align-items-center my-2">
-            <label>Content</label>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={this.copyMarkdown}
-              onBlur={() => (this.copied = false)}
-            >
-              {copied ? '√' : ''} Copy MarkDown
-            </Button>
+            <label>{t('content')}</label>
           </div>
-          <MarkdownEditor ref={this.Core} />
+          <HTMLEditor
+            defaultValue={this.editorContent}
+            onChange={value => (this.editorContent = value)}
+          />
         </Form.Group>
       </Form>
     );

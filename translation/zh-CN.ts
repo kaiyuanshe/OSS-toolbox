@@ -106,6 +106,16 @@ export default {
   range_module: '模块',
   last_step: '上一步',
 
+  // Git pager
+  repository: '代码仓库',
+  file_path: '文件路径',
+  commit_message: '提交信息',
+  commit: '提交',
+  clear: '清空',
+  meta: '元数据',
+  content: '内容',
+  copy_MarkDown: '复制 Markdown',
+
   //Polyfill page
   select_compatible_browser: '选择兼容浏览器',
   select_features: '选择特性',
