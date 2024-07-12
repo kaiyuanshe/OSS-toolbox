@@ -111,8 +111,8 @@ export default {
 
   // Git pager
   repository: 'repository',
-  file_path: 'filePath',
-  commit_message: 'commit Message',
+  file_path: 'file path',
+  commit_message: 'commit message',
   commit: 'commit',
   clear: 'clear',
   meta: 'meta',
