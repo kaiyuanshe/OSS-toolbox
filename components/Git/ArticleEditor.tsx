@@ -61,9 +61,6 @@ export class ArticleEditor extends Component {
   @observable
   accessor meta: PostMeta | null = null;
 
-  @observable
-  accessor copied = false;
-
   static contentFilter({ type, name }: GitContent) {
     return (
       type === 'dir' ||
@@ -125,9 +122,7 @@ export class ArticleEditor extends Component {
   };
 
   onPathClear = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (value.trim()) return;
-
-    this.reset();
+    if (!value.trim()) this.reset();
   };
 
   fixURL = debounce(() => {
@@ -214,16 +209,6 @@ export class ArticleEditor extends Component {
     window.alert('Submitted');
   };
 
-  copyMarkdown = async (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    if (this.editorContent) {
-      await navigator.clipboard.writeText(this.editorContent);
-
-      this.copied = true;
-    }
-  };
-
   loadFile = async (path: string) => {
     const type = path.split('.').at(-1)?.toLowerCase();
 
@@ -241,7 +226,7 @@ export class ArticleEditor extends Component {
   };
 
   render() {
-    const { repository, meta, copied } = this;
+    const { repository, meta } = this;
 
     return (
       <Form
@@ -296,14 +281,6 @@ export class ArticleEditor extends Component {
         <Form.Group onInput={this.fixURL}>
           <div className="d-flex justify-content-between align-items-center my-2">
             <label>{t('content')}</label>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={this.copyMarkdown}
-              onBlur={() => (this.copied = false)}
-            >
-              {copied ? '√' : ''} {t('copyMarkDown')}
-            </Button>
           </div>
           <HTMLEditor
             defaultValue={this.editorContent}
