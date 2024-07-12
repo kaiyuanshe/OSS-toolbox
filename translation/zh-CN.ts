@@ -106,8 +106,8 @@ export default {
   range_module: '模块',
   last_step: '上一步',
 
-  //polyfill page
-  selectCompatibleBrowser: '选择兼容浏览器',
-  features: '选择功能组件',
-  searchFeature: '搜索功能组件',
+  //Polyfill page
+  select_compatible_browser: '选择兼容浏览器',
+  features: '选择特性',
+  search_feature: '搜索特性',
 } as const;

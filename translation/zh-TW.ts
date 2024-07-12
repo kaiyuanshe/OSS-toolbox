@@ -106,8 +106,8 @@ export default {
   range_module: '模組',
   last_step: '上一步',
 
-  //polyfill page
-  selectCompatibleBrowser: '選擇相容瀏覽器',
-  features: '選擇功能模組',
-  searchFeature: '搜尋功能模組',
+  //Polyfill page
+  select_compatible_browser: '選擇相容瀏覽器',
+  select_features: '選擇特性',
+  search_feature: '搜尋特性',
 } as const;
