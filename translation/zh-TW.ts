@@ -106,7 +106,7 @@ export default {
   range_module: '模組',
   last_step: '上一步',
 
-  // git pager
+  // Git pager
   repository: '程式碼倉庫',
   file_path: '檔案路徑',
   commit_message: '提交訊息',

@@ -109,7 +109,7 @@ export default {
   range_module: 'module',
   last_step: 'back',
 
-  // git pager
+  // Git pager
   repository: 'repository',
   file_path: 'filePath',
   commit_message: 'commit Message',
