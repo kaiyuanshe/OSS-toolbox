@@ -59,7 +59,7 @@ export default class PolyfillPage extends Component {
           <h1>{t('Web_polyfill_CDN')}</h1>
 
           <DropdownButton
-            title={textJoin(t('selectCompatibleBrowser'), currentUA)}
+            title={textJoin(t('select_compatible_browser'), currentUA)}
           >
             {Object.entries(UserAgent).map(([name, value]) => (
               <Dropdown.Item
@@ -75,10 +75,10 @@ export default class PolyfillPage extends Component {
 
         <Accordion>
           <Accordion.Item eventKey="0">
-            <Accordion.Header>{t('features')}</Accordion.Header>
+            <Accordion.Header>{t('select_features')}</Accordion.Header>
             <Accordion.Body>
               <Tree
-                filterPlaceholder={t('searchFeature')}
+                filterPlaceholder={t('search_feature')}
                 filter
                 selectionMode="checkbox"
                 value={options}
