@@ -105,4 +105,9 @@ export default {
   range_file: '檔案',
   range_module: '模組',
   last_step: '上一步',
+
+  //Polyfill page
+  select_compatible_browser: '選擇相容瀏覽器',
+  select_features: '選擇特性',
+  search_feature: '搜尋特性',
 } as const;
