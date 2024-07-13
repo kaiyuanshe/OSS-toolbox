@@ -46,11 +46,12 @@ jobs:
       - name: Transport Image
         uses: appleboy/scp-action@v0.1.7
         with:
-          source: ./build/*
+          source: ./build
           target: /tmp/${{ env.BOX_NAME }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.SSH_KEY }}
+          strip_components: 1
 
       - name: Run Image
         uses: garygrossgarten/github-action-ssh@release
