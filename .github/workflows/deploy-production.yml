@@ -44,7 +44,7 @@ jobs:
           mv ${{ env.ARTIFACT_PATH }} ./docker-compose.yml ./start.sh ./build
 
       - name: Transport Image
-        uses: garygrossgarten/github-action-scp@release
+        uses: garygrossgarten/github-action-scp@v0.8.0
         with:
           local: ./build
           remote: /tmp/${{ env.BOX_NAME }}
