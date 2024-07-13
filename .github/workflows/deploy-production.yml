@@ -46,7 +46,7 @@ jobs:
       - name: Transport Image
         uses: appleboy/scp-action@v0.1.7
         with:
-          source: ./build
+          source: ./build/*
           target: /tmp/${{ env.BOX_NAME }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
@@ -60,8 +60,8 @@ jobs:
           password: ${{ secrets.SSH_KEY }}
           command: |
             mkdir -p ~/${{ env.BOX_NAME }} 
-            cd /tmp/${{ env.BOX_NAME }}/build
+            cd /tmp/${{ env.BOX_NAME }}
             mv docker-compose.yml start.sh ~/${{ env.BOX_NAME }}
             cd ~/${{ env.BOX_NAME }}
             chmod +x start.sh
-            echo '${{ secrets.SSH_KEY }}' | sudo -S ./start.sh /tmp/${{ env.BOX_NAME }}/build/${{ env.ARTIFACT_PATH }}
+            echo '${{ secrets.SSH_KEY }}' | sudo -S ./start.sh /tmp/${{ env.BOX_NAME }}/${{ env.ARTIFACT_PATH }}
