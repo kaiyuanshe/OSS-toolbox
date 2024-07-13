@@ -46,7 +46,7 @@ jobs:
       - name: Transport Image
         uses: appleboy/scp-action@v0.1.7
         with:
-          source: ./build
+          source: ./build/*.*
           target: /tmp/${{ env.BOX_NAME }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
