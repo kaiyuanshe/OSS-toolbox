@@ -11,6 +11,8 @@ env:
   ARTIFACT_PATH: artifact.tar
   BOX_NAME: oss-toolbox
   BOX_URL: kaiyuanshe/oss-toolbox
+  DOCKER_BUILD_SUMMARY: false
+  DOCKER_BUILD_RECORD_UPLOAD: false
 
 jobs:
   deploy_docker_image:
@@ -29,9 +31,6 @@ jobs:
           EOF
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
-        env:
-          DOCKER_BUILD_SUMMARY: false
-          DOCKER_BUILD_RECORD_UPLOAD: false
 
       - name: Build Image
         uses: docker/build-push-action@v6
