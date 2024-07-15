@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import {
   AudioTool,
+  CopyMarkdownTool,
   Editor,
   EditorProps,
   IFrameTool,
-  ImageTool,
   OriginalTools,
   VideoTool,
 } from 'react-bootstrap-editor';
@@ -17,6 +17,6 @@ const CustomTools = OriginalTools.filter(
 );
 
 const HTMLEditor: FC<EditorProps> = props => (
-  <Editor tools={CustomTools} {...props} />
+  <Editor tools={[...CustomTools, CopyMarkdownTool]} {...props} />
 );
 export default HTMLEditor;

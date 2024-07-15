@@ -1,11 +1,12 @@
 import { readAs } from 'koajax';
 import { debounce } from 'lodash';
+import { marked } from 'marked';
 import { computed, observable } from 'mobx';
 import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { DataObject } from 'mobx-restful';
 import dynamic from 'next/dynamic';
-import { ChangeEvent, Component, FormEvent, MouseEvent } from 'react';
+import { ChangeEvent, Component, FormEvent } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
@@ -37,7 +38,9 @@ export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 export class ArticleEditor extends Component {
   @observable
   accessor repository = '';
-  editorContent = '';
+
+  @observable
+  accessor editorContent = '';
 
   @computed
   get currentRepository() {
@@ -56,7 +59,7 @@ export class ArticleEditor extends Component {
   }
 
   path = '';
-  URL = '';
+  currentFileURL = '';
 
   @observable
   accessor meta: PostMeta | null = null;
@@ -76,7 +79,8 @@ export class ArticleEditor extends Component {
 
     if (!meta.authors?.includes(login)) meta.authors?.push(login);
 
-    const path = this.URL.split('/')
+    const path = this.currentFileURL
+      .split('/')
       .slice(7, -1)
       .filter(name => !name.startsWith('_'));
 
@@ -87,7 +91,8 @@ export class ArticleEditor extends Component {
   }
 
   setContent = async (URL: string, data?: Blob) => {
-    this.URL = URL;
+    this.currentFileURL = URL;
+    this.reset();
 
     const type = URL.split('.').slice(-1)[0];
 
@@ -110,10 +115,10 @@ export class ArticleEditor extends Component {
 
       meta[1] = meta[1].trim();
 
-      if (meta[1]) this.setPostMeta(meta[1]);
+      if (meta[1]) await this.setPostMeta(meta[1]);
     }
 
-    this.editorContent = content;
+    this.editorContent = marked(content) as string;
   };
 
   reset = () => {
@@ -137,7 +142,7 @@ export class ArticleEditor extends Component {
 
         if (URI.startsWith(pageURL)) URI = URI.slice(pageURL.length);
 
-        URI = new URL(URI, this.URL || window.location.href) + '';
+        URI = new URL(URI, this.currentFileURL || window.location.href) + '';
 
         if (element instanceof HTMLImageElement)
           element.src = URI.replace(
@@ -149,7 +154,7 @@ export class ArticleEditor extends Component {
   });
 
   getContent() {
-    const type = this.URL.split('.').slice(-1)[0],
+    const type = this.currentFileURL.split('.').slice(-1)[0],
       { meta, editorContent } = this;
 
     if (fileType.JSON.includes(type)) return JSON.stringify(meta);
@@ -219,14 +224,14 @@ export class ArticleEditor extends Component {
     const buffer = await this.repositoryStore.downloadRaw(path, name),
       { default_branch } = this.repositoryStore.currentOne;
 
-    this.setContent(
+    await this.setContent(
       `https://github.com/${owner}/${name}/blob/${default_branch}/${path}`,
       new Blob([buffer]),
     );
   };
 
   render() {
-    const { repository, meta } = this;
+    const { repository, meta, editorContent } = this;
 
     return (
       <Form
@@ -282,10 +287,12 @@ export class ArticleEditor extends Component {
           <div className="d-flex justify-content-between align-items-center my-2">
             <label>{t('content')}</label>
           </div>
-          <HTMLEditor
-            defaultValue={this.editorContent}
-            onChange={value => (this.editorContent = value)}
-          />
+          {editorContent && (
+            <HTMLEditor
+              defaultValue={editorContent}
+              onChange={value => (this.editorContent = value)}
+            />
+          )}
         </Form.Group>
       </Form>
     );

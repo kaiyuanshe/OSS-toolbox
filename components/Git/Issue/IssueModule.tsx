@@ -27,7 +27,7 @@ export const IssueModule: FC<GitRepository> = ({ name, language, issues }) => {
           </Col>
           <Col xs={1} className="text-end">
             <Badge className="fs-6" pill bg="info">
-              {issues.length}
+              {issues?.length}
             </Badge>
           </Col>
           <Col xs={1} className="text-end">
@@ -41,7 +41,7 @@ export const IssueModule: FC<GitRepository> = ({ name, language, issues }) => {
 
       <Collapse in={isExpand}>
         <Card.Body as={Row} xs={1} sm={2} xl={2} className="g-3">
-          {issues.map(issue => (
+          {issues?.map(issue => (
             <Col key={issue.title}>
               <IssueCard className="h-100" {...issue} />
             </Col>
