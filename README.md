@@ -19,11 +19,27 @@
 
 ## Major features
 
-### Open Source license filter
+### 1. KaiYuanShe issue board
+
+- [home page](https://oss-toolbox.kaiyuanshe.cn)
+- [source code](pages/issue.tsx)
+
+### 2. Open Source license filter
 
 - [introduction](https://kaiyuanshe.feishu.cn/wiki/wikcnRn5pkE3BSvqFUMkJPymaG3)
-- [home page](https://oss-toolbox.vercel.app/license-filter/)
+- [home page](https://oss-toolbox.kaiyuanshe.cn/license-filter)
 - [source code](pages/license-filter.tsx)
+
+### 3. Git Pager
+
+- [home page](https://oss-toolbox.kaiyuanshe.cn/article/editor)
+- [source code](pages/article/editor.tsx)
+
+### 4. Polyfiller
+
+- [introduction](https://kaiyuanshe.feishu.cn/wiki/A1JSwFP0ti44QTkhGqncTQMYnDb#YF8JdvKlRonXssxQHRGccDITnMb)
+- [home page](https://oss-toolbox.kaiyuanshe.cn/polyfill)
+- [source code](pages/polyfill.tsx)
 
 ## Major examples
 
@@ -31,19 +47,22 @@
 
 ## Best practice
 
-1.  Install **[Settings][19] GitHub app** in your account or organization
+1.  Install GitHub apps in your organization or account:
 
-2.  Click the **[<kbd>Use this template</kbd>][20] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
+    1.  [Probot settings][19]: set up Issue labels & Pull Request rules
+    2.  [PR badge][20]: set up Online [VS Code][21] editor entries in Pull Request description
 
-3.  Click the **[<kbd>Open in GitHub codespaces</kbd>][21] button** on the top of ReadMe file, then an **online VS Code development environment** will be started immediately
+2.  Click the **[<kbd>Use this template</kbd>][22] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
 
-4.  Set [Vercel variables][22] as [Repository secrets][23], then every commit will get an independent **Preview URL**
+3.  Click the **[<kbd>Open in GitHub codespaces</kbd>][23] button** on the top of ReadMe file, then an **online VS Code development environment** will be started immediately
 
-5.  Recommend to add a [Notification step in GitHub actions][24] for your Team IM app
+4.  Set [Vercel variables][24] as [Repository secrets][25], then every commit will get an independent **Preview URL**
 
-6.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][25] instead of IM messages or Mobile Phone calls
+5.  Recommend to add a [Notification step in GitHub actions][26] for your Team IM app
 
-7.  Collect all these issues into [Project kanbans][26], then create **Pull requests** & add `closes #issue_number` into its description for automation
+6.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][27] instead of IM messages or Mobile Phone calls
+
+7.  Collect all these issues into [Project kanbans][28], then create **Pull requests** & add `closes #issue_number` into its description for automation
 
 ## Getting Started
 
@@ -58,18 +77,18 @@ Open http://localhost:3000 with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes][27] can be accessed on http://localhost:3000/api/hello. This endpoint can be edited in `pages/api/hello.ts`.
+[API routes][29] can be accessed on http://localhost:3000/api/hello. This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes][28] instead of React pages.
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes][30] instead of React pages.
 
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation][29] - learn about Next.js features and API.
-- [Learn Next.js][30] - an interactive Next.js tutorial.
+- [Next.js Documentation][31] - learn about Next.js features and API.
+- [Learn Next.js][32] - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository][31] - your feedback and contributions are welcome!
+You can check out [the Next.js GitHub repository][33] - your feedback and contributions are welcome!
 
 ## Deployment
 
@@ -77,16 +96,16 @@ You can check out [the Next.js GitHub repository][31] - your feedback and contri
 
 |           name           |     file     |       description       |
 | :----------------------: | :----------: | :---------------------: |
-|   `SENTRY_AUTH_TOKEN`    | `.env.local` | [Official document][32] |
-|       `SENTRY_ORG`       |    `.env`    | [Official document][33] |
-|     `SENTRY_PROJECT`     |    `.env`    | [Official document][33] |
-| `NEXT_PUBLIC_SENTRY_DSN` |    `.env`    | [Official document][34] |
+|   `SENTRY_AUTH_TOKEN`    | `.env.local` | [Official document][34] |
+|       `SENTRY_ORG`       |    `.env`    | [Official document][35] |
+|     `SENTRY_PROJECT`     |    `.env`    | [Official document][36] |
+| `NEXT_PUBLIC_SENTRY_DSN` |    `.env`    | [Official document][37] |
 
 ### Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform][17] from the creators of Next.js.
 
-Check out our [Next.js deployment documentation][35] for more details.
+Check out our [Next.js deployment documentation][37] for more details.
 
 ### Docker
 
@@ -114,19 +133,21 @@ pnpm container
 [17]: https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme
 [18]: https://sentry.io/
 [19]: https://github.com/apps/settings
-[20]: https://github.com/new?template_name=Next-Bootstrap-ts&template_owner=idea2app
-[21]: https://codespaces.new/kaiyuanshe/OSS-toolbox
-[22]: https://github.com/idea2app/Next-Bootstrap-ts/blob/80967ed49045af9dbcf4d3695a2c39d53a6f71f1/.github/workflows/pull-request.yml#L9-L11
-[23]: https://github.com/kaiyuanshe/OSS-toolbox/settings/secrets/actions
-[24]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
-[25]: https://github.com/kaiyuanshe/OSS-toolbox/issues/new/choose
-[26]: https://github.com/kaiyuanshe/OSS-toolbox/projects
-[27]: https://nextjs.org/docs/api-routes/introduction
-[28]: https://nextjs.org/docs/api-routes/introduction
-[29]: https://nextjs.org/docs
-[30]: https://nextjs.org/learn
-[31]: https://github.com/vercel/next.js/
-[32]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-configuration-files-for-source-map-upload
-[33]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-environment-variables
-[34]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files
-[35]: https://nextjs.org/docs/deployment
+[20]: https://pullrequestbadge.com/
+[21]: https://code.visualstudio.com/
+[22]: https://github.com/new?template_name=Next-Bootstrap-ts&template_owner=idea2app
+[23]: https://codespaces.new/kaiyuanshe/OSS-toolbox
+[24]: https://github.com/kaiyuanshe/OSS-toolbox/blob/219e81ef1454051dd705dbe5a8b857b3d77f0237/.github/workflows/main.yml#L9-L11
+[25]: https://github.com/kaiyuanshe/OSS-toolbox/settings/secrets/actions
+[26]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
+[27]: https://github.com/kaiyuanshe/OSS-toolbox/issues/new/choose
+[28]: https://github.com/kaiyuanshe/OSS-toolbox/projects
+[29]: https://nextjs.org/docs/api-routes/introduction
+[30]: https://nextjs.org/docs/api-routes/introduction
+[31]: https://nextjs.org/docs
+[32]: https://nextjs.org/learn
+[33]: https://github.com/vercel/next.js/
+[34]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-configuration-files-for-source-map-upload
+[35]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-environment-variables
+[36]: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files
+[37]: https://nextjs.org/docs/deployment
