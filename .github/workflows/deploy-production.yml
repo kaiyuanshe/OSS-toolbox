@@ -37,12 +37,22 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          tags: ${{ env.BOX_URL }}:latest
-          outputs: type=docker,dest=${{ env.ARTIFACT_PATH }}
+          tags:
+            ${{ env.BOX_URL }}:latest
+
+            # Slim the Docker image
+      - name: Slim Docker image
+        uses: kitabisa/docker-slim-action@v1
+        env:
+          DSLIM_HTTP_PROBE: false
+        with:
+          target: ${{ env.BOX_URL }}:latest
+          tag: 'slim'
 
       - name: Pick Docker Compose
         run: |
           mkdir ./build
+          docker save ${{ env.BOX_URL }}:slim -o ${{ env.ARTIFACT_PATH }}
           mv ${{ env.ARTIFACT_PATH }} ./docker-compose.yml ./start.sh ./build
 
       - name: Transport Image
