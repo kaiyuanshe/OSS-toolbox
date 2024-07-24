@@ -24,4 +24,4 @@ COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next ./.next
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm","run", "start"]
