@@ -34,6 +34,8 @@ jobs:
 
       - name: Build Image
         uses: docker/build-push-action@v4
+        env:
+          load: true
         with:
           context: .
           platforms: linux/amd64
