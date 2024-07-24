@@ -42,7 +42,11 @@ jobs:
           tags:
             ${{ env.BOX_URL }}:latest
 
-            # Slim the Docker image
+      - name: show docker image
+        run: | 
+          docker images
+
+        # Slim the Docker image
       - name: Slim Docker image
         uses: kitabisa/docker-slim-action@v1
         env:
