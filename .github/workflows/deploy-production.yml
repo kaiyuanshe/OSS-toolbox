@@ -50,6 +50,7 @@ jobs:
         uses: kitabisa/docker-slim-action@v1
         env:
           DSLIM_HTTP_PROBE: false
+          DSLIM_INCLUDE_APP_NEXT_DIR: true
         with:
           target: ${{ env.BOX_URL }}:latest
           tag: 'slim'
