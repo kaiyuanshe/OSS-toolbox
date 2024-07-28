@@ -37,15 +37,13 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
+          tags: ${{ env.BOX_URL }}:latest
           load: true
-          tags:
-            ${{ env.BOX_URL }}:latest
 
       - name: show docker image
-        run: | 
+        run: |
           docker images
 
-        # Slim the Docker image
       - name: Slim Docker image
         uses: kitabisa/docker-slim-action@v1
         env:
@@ -54,7 +52,7 @@ jobs:
           DSLIM_INCLUDE_APP_NEXT_BUILD_DIR: true
           DSLIM_INCLUDE_APP_NEXT_DIST_DIR: true
           DSLIM_INCLUDE_APP_NEXT_STATIC_DIR: true
-          DSLIM_INCLUDE_APP_NEXT_NM_DIR : true
+          DSLIM_INCLUDE_APP_NEXT_NM_DIR: true
         with:
           target: ${{ env.BOX_URL }}:latest
           tag: 'slim'
