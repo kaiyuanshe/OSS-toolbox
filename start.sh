@@ -5,3 +5,5 @@ docker image ls -a
 
 docker-compose down -v
 docker-compose up -d
+
+docker image prune -a -f
