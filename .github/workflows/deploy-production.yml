@@ -47,7 +47,7 @@ jobs:
       - name: Pick Docker Compose
         run: |
           mkdir ./build
-          docker save ${{ env.BOX_URL }}:slim -o ${{ env.ARTIFACT_PATH }}
+          docker save ${{ env.BOX_URL }} -o ${{ env.ARTIFACT_PATH }}
           chmod 664 ${{ env.ARTIFACT_PATH }}
           mv ${{ env.ARTIFACT_PATH }} ./docker-compose.yml ./start.sh ./build
 
