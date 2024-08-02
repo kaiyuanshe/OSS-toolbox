@@ -19,9 +19,9 @@ FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store  pnpm i --frozen-lockfile
 RUN pnpm build
 
-FROM base
+FROM gcr.io/distroless/nodejs18-debian12
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next ./.next
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["./node_modules/next/dist/bin/next", "start"]
