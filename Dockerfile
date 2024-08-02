@@ -12,16 +12,13 @@ RUN corepack enable
 COPY . /app
 WORKDIR /app
 
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store  pnpm i -P --frozen-lockfile --ignore-scripts
-
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store  pnpm i --frozen-lockfile
 RUN pnpm build
 
 FROM gcr.io/distroless/nodejs18-debian12
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/public ./public
-COPY --from=build /app/.next ./.next
+
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
 EXPOSE 3000
-CMD ["./node_modules/next/dist/bin/next", "start"]
+CMD ["server.js"]
