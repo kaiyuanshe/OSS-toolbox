@@ -53,7 +53,7 @@ jobs:
           DSLIM_INCLUDE_APP_NEXT_DIST_DIR: true
           DSLIM_INCLUDE_APP_NEXT_STATIC_DIR: true
           DSLIM_INCLUDE_APP_NEXT_NM_DIR: true
-          DSLIM_INCLUDE_PATH: '/.next'
+          DSLIM_INCLUDE_PATH: '/.next  /node_modules'
         with:
           target: ${{ env.BOX_URL }}:latest
           tag: 'slim'
