@@ -2,7 +2,7 @@ version: '3'
 
 services:
   oss-toolbox:
-    image: kaiyuanshe/oss-toolbox:slim
+    image: kaiyuanshe/oss-toolbox
     ports:
       - 3002:3000
     healthcheck:

@@ -44,20 +44,6 @@ jobs:
         run: |
           docker images
 
-      - name: Slim Docker image
-        uses: kitabisa/docker-slim-action@v1
-        env:
-          DSLIM_HTTP_PROBE: false
-          DSLIM_INCLUDE_APP_NEXT_DIR: true
-          DSLIM_INCLUDE_APP_NEXT_BUILD_DIR: true
-          DSLIM_INCLUDE_APP_NEXT_DIST_DIR: true
-          DSLIM_INCLUDE_APP_NEXT_STATIC_DIR: true
-          DSLIM_INCLUDE_APP_NEXT_NM_DIR: true
-          DSLIM_INCLUDE_PATH: '/.next  /node_modules'
-        with:
-          target: ${{ env.BOX_URL }}:latest
-          tag: 'slim'
-
       - name: Pick Docker Compose
         run: |
           mkdir ./build
