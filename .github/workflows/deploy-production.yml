@@ -38,17 +38,11 @@ jobs:
           context: .
           platforms: linux/amd64
           tags: ${{ env.BOX_URL }}:latest
-          load: true
-
-      - name: show docker image
-        run: |
-          docker images
+          outputs: type=docker,dest=${{ env.ARTIFACT_PATH }}
 
       - name: Pick Docker Compose
         run: |
           mkdir ./build
-          docker save ${{ env.BOX_URL }} -o ${{ env.ARTIFACT_PATH }}
-          chmod 664 ${{ env.ARTIFACT_PATH }}
           mv ${{ env.ARTIFACT_PATH }} ./docker-compose.yml ./start.sh ./build
 
       - name: Transport Image
