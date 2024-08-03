@@ -30,6 +30,7 @@ const withPWA = setPWA({
 const nextConfig = withPWA(
   withLess(
     withMDX({
+      output: 'standalone',
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 
       webpack: config => {
