@@ -16,7 +16,7 @@ FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store  pnpm i --frozen-lockfile
 RUN pnpm build
 
-FROM  base
+FROM base
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next/static ./.next/static
