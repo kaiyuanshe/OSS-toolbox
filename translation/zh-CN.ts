@@ -120,4 +120,8 @@ export default {
   select_compatible_browser: '选择兼容浏览器',
   select_features: '选择特性',
   search_feature: '搜索特性',
+
+  //volunteer page
+  volunteer: '志愿者',
+  online_volunteer: '线上志愿者',
 } as const;

@@ -8,6 +8,9 @@ import { PageHead } from '../components/PageHead';
 import { PersonCard } from '../components/PersonCard';
 import { SectionTitle } from '../components/SectionTitle';
 import { repositoryStore } from '../models/Repository';
+import { i18n } from '../models/Translation';
+
+const { t } = i18n;
 
 export const getServerSideProps = compose(cache(), errorLogger, async () => {
   const contributors: Contributor[] =
@@ -21,10 +24,12 @@ const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   contributors,
 }) => (
   <Container>
-    <PageHead title="志愿者" />
-    <h1 className="py-5 text-center text-md-start ps-md-4">志愿者</h1>
+    <PageHead title={t('volunteer')} />
+    <h1 className="py-5 text-center text-md-start ps-md-4">{t('volunteer')}</h1>
 
-    <SectionTitle count={contributors.length}>线上开源志愿者</SectionTitle>
+    <SectionTitle count={contributors.length}>
+      {t('online_volunteer')}
+    </SectionTitle>
     <Row
       as="ul"
       className="list-unstyled justify-content-center text-center"
