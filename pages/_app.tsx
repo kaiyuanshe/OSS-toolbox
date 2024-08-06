@@ -41,7 +41,7 @@ const AppShell: FC<AppProps> = observer(({ Component, pageProps, router }) => (
     <footer className="border-top bg-light text-secondary py-5">
       <Container>
         <Row className="align-items-center small text-center g-2">
-          <Col xs={12} sm={8}>
+          <Col xs={12} sm={6}>
             <a
               className="flex-fill d-flex justify-content-center align-items-center"
               href="https://vercel.com?utm_source=create-next-app&amp;utm_medium=default-template&amp;utm_campaign=create-next-app"
@@ -59,7 +59,16 @@ const AppShell: FC<AppProps> = observer(({ Component, pageProps, router }) => (
               </span>
             </a>
           </Col>
-          <Col xs={12} sm={1}>
+          <Col xs={6} sm={3}>
+            <a
+              target="_blank"
+              href="https://github.com/kaiyuanshe/OSS-toolbox"
+              rel="noreferrer"
+            >
+              {t('source_code')}
+            </a>
+          </Col>
+          <Col xs={6} sm={3} className="position-relative">
             <a
               className="stretched-link"
               target="_blank"

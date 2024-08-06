@@ -28,10 +28,6 @@ export const MainRoutes: () => Link[] = () => [
     path: '/article/editor',
   },
   {
-    title: t('source_code'),
-    path: 'https://github.com/kaiyuanshe/OSS-toolbox',
-  },
-  {
     title: t('volunteer'),
     path: '/volunteer',
   },
