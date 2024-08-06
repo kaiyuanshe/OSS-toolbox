@@ -126,5 +126,5 @@ export default {
 
   //volunteer page
   volunteer: 'volunteer',
-  online: 'online volunteer',
+  online: 'online ',
 } as const;
