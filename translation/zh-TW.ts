@@ -120,4 +120,8 @@ export default {
   select_compatible_browser: '選擇相容瀏覽器',
   select_features: '選擇特性',
   search_feature: '搜尋特性',
+
+  //volunteer page
+  volunteer: '志願者',
+  online_volunteer: '線上志願者',
 } as const;

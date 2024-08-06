@@ -123,4 +123,8 @@ export default {
   select_compatible_browser: 'select Compatible Browser',
   select_features: 'select features',
   search_feature: 'search Feature',
+
+  //volunteer page
+  volunteer: 'volunteer',
+  online_volunteer: 'online volunteer',
 } as const;
