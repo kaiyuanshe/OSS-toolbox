@@ -14,9 +14,7 @@ const { t } = i18n;
 
 export const getServerSideProps = compose(cache(), errorLogger, async () => {
   const contributors: Contributor[] =
-    // @ts-ignore
     await repositoryStore.getAllContributors();
-
   return { props: { contributors } };
 });
 
