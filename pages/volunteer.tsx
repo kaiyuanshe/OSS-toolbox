@@ -8,21 +8,16 @@ import { PageHead } from '../components/PageHead';
 import { PersonCard } from '../components/PersonCard';
 import { SectionTitle } from '../components/SectionTitle';
 import { GitRepositoryModel } from '../models/Repository';
-import * as cityData from './api/city';
 
 export const getServerSideProps = compose(cache(), errorLogger, async () => {
-  const organizers = Object.values(cityData).flatMap(
-    ({ organizers }) => organizers || [],
-  );
   const contributors: Contributor[] =
     // @ts-ignore
     await new GitRepositoryModel().getAllContributors();
 
-  return { props: { organizers, contributors } };
+  return { props: { contributors } };
 });
 
 const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
-  organizers,
   contributors,
 }) => (
   <Container>
