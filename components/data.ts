@@ -32,7 +32,7 @@ export const MainRoutes: () => Link[] = () => [
     path: 'https://github.com/kaiyuanshe/OSS-toolbox',
   },
   {
-    title: 'volunteer',
+    title: t('volunteer'),
     path: '/volunteer',
   },
 ];
