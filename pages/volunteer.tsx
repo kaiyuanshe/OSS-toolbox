@@ -7,8 +7,7 @@ import { Container, Row } from 'react-bootstrap';
 import { PageHead } from '../components/PageHead';
 import { PersonCard } from '../components/PersonCard';
 import { SectionTitle } from '../components/SectionTitle';
-import { repositoryStore } from '../models/Repository';
-import { i18n } from '../models/Translation';
+import { GitRepositoryModel } from '../models/Repository';
 import * as cityData from './api/city';
 
 export const getServerSideProps = compose(cache(), errorLogger, async () => {
@@ -17,7 +16,7 @@ export const getServerSideProps = compose(cache(), errorLogger, async () => {
   );
   const contributors: Contributor[] =
     // @ts-ignore
-    await new RepositoryModel().getAllContributors();
+    await new GitRepositoryModel().getAllContributors();
 
   return { props: { organizers, contributors } };
 });
