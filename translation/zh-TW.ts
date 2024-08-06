@@ -123,5 +123,5 @@ export default {
 
   //volunteer page
   volunteer: '志願者',
-  online_volunteer: '線上志願者',
+  online: '線上',
 } as const;

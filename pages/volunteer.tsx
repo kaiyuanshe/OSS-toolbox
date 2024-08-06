@@ -26,7 +26,7 @@ const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
     <h1 className="py-5 text-center text-md-start ps-md-4">{t('volunteer')}</h1>
 
     <SectionTitle count={contributors.length}>
-      {t('online_volunteer')}
+      {t('online') + t('volunteer')}
     </SectionTitle>
     <Row
       as="ul"

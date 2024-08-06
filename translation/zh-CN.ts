@@ -123,5 +123,5 @@ export default {
 
   //volunteer page
   volunteer: '志愿者',
-  online_volunteer: '线上志愿者',
+  online: '线上',
 } as const;
