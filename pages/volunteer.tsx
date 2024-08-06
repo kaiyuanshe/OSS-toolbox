@@ -7,12 +7,12 @@ import { Container, Row } from 'react-bootstrap';
 import { PageHead } from '../components/PageHead';
 import { PersonCard } from '../components/PersonCard';
 import { SectionTitle } from '../components/SectionTitle';
-import { GitRepositoryModel } from '../models/Repository';
+import { repositoryStore } from '../models/Repository';
 
 export const getServerSideProps = compose(cache(), errorLogger, async () => {
   const contributors: Contributor[] =
     // @ts-ignore
-    await new GitRepositoryModel().getAllContributors();
+    await new repositoryStore('kaiyuanshe').getAllContributors();
 
   return { props: { contributors } };
 });
