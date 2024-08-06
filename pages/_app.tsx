@@ -1,11 +1,12 @@
 import '../styles/globals.less';
 
+import { Icon } from 'idea-react';
 import { configure } from 'mobx';
 import { enableStaticRendering, observer } from 'mobx-react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { FC } from 'react';
-import { Image } from 'react-bootstrap';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 
 import { MainNavigator } from '../components/MainNavigator';
 import { MDXLayout } from '../components/MDXLayout';
@@ -37,18 +38,39 @@ const AppShell: FC<AppProps> = observer(({ Component, pageProps, router }) => (
       </div>
     )}
 
-    <footer className="flex-fill d-flex justify-content-center align-items-center border-top py-4">
-      <a
-        className="flex-fill d-flex justify-content-center align-items-center"
-        href="https://vercel.com?utm_source=create-next-app&amp;utm_medium=default-template&amp;utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {t('powered_by')}
-        <span className="mx-2">
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </span>
-      </a>
+    <footer className="border-top bg-light text-secondary py-5">
+      <Container>
+        <Row className="align-items-center small text-center g-2">
+          <Col xs={12} sm={8}>
+            <a
+              className="flex-fill d-flex justify-content-center align-items-center"
+              href="https://vercel.com?utm_source=create-next-app&amp;utm_medium=default-template&amp;utm_campaign=create-next-app"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('powered_by')}
+              <span className="mx-2">
+                <Image
+                  src="/vercel.svg"
+                  alt="Vercel Logo"
+                  width={72}
+                  height={16}
+                />
+              </span>
+            </a>
+          </Col>
+          <Col xs={12} sm={1}>
+            <a
+              className="stretched-link"
+              target="_blank"
+              href="https://monitor.kaiyuanshe.cn/status/service"
+              rel="noreferrer"
+            >
+              <Icon name="hdd-network" size={1.5} />
+            </a>
+          </Col>
+        </Row>
+      </Container>
     </footer>
   </>
 ));

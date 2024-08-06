@@ -32,7 +32,7 @@ const nextConfig = withPWA(
     withMDX({
       output: 'standalone',
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-
+      transpilePackages: ['@sentry/browser'],
       webpack: config => {
         config.plugins.push(
           new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
@@ -79,18 +79,10 @@ const nextConfig = withPWA(
 
 export default isDev || !SENTRY_AUTH_TOKEN
   ? nextConfig
-  : withSentryConfig(
-      {
-        ...nextConfig,
-        sentry: {
-          transpileClientSDK: true,
-          autoInstrumentServerFunctions: false,
-        },
-      },
-      {
-        org: SENTRY_ORG,
-        project: SENTRY_PROJECT,
-        authToken: SENTRY_AUTH_TOKEN,
-        silent: true,
-      },
-    );
+  : withSentryConfig(nextConfig, {
+      autoInstrumentServerFunctions: false,
+      org: SENTRY_ORG,
+      project: SENTRY_PROJECT,
+      authToken: SENTRY_AUTH_TOKEN,
+      silent: true,
+    });
