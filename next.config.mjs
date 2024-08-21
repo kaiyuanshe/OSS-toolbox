@@ -2,12 +2,14 @@ import NextMDX from '@next/mdx';
 import { withSentryConfig } from '@sentry/nextjs';
 import CopyPlugin from 'copy-webpack-plugin';
 import { readdirSync, statSync } from 'fs';
+// @ts-ignore
 import setPWA from 'next-pwa';
+// @ts-ignore
 import withLess from 'next-with-less';
 import RemarkFrontMatter from 'remark-frontmatter';
 import RemarkGfm from 'remark-gfm';
 import RemarkMdxFrontMatter from 'remark-mdx-frontmatter';
-import webpack from 'webpack';
+import wp from 'webpack';
 
 const { NODE_ENV, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = process.env;
 const isDev = NODE_ENV === 'development';
@@ -26,6 +28,78 @@ const withPWA = setPWA({
   disable: isDev,
 });
 
+/**
+ * @type {import('next').NextConfig['webpack']}
+ */
+const webpack = config => {
+  config.plugins.push(
+    new wp.NormalModuleReplacementPlugin(/^node:/, resource => {
+      resource.request = resource.request.replace(/^node:/, '');
+    }),
+  );
+
+  if (
+    statSync('pages/article', {
+      throwIfNoEntry: false,
+    })?.isDirectory() &&
+    readdirSync('pages/article')[0]
+  )
+    config.plugins.push(
+      new CopyPlugin({
+        patterns: [{ from: 'pages/article', to: 'static/article' }],
+      }),
+    );
+  return config;
+};
+
+/**
+ * @type {import('next').NextConfig['rewrites']}
+ */
+const rewrites = async () => ({
+  beforeFiles: [
+    {
+      source: '/proxy/github.com/:path*',
+      has: isDev
+        ? undefined
+        : [
+            {
+              type: 'header',
+              key: 'Host',
+              value: 'test.oss-toolbox.kaiyuanshe.cn',
+            },
+          ],
+      destination: 'https://github.com/:path*',
+    },
+    {
+      source: '/proxy/raw.githubusercontent.com/:path*',
+      has: isDev
+        ? undefined
+        : [
+            {
+              type: 'header',
+              key: 'Host',
+              value: 'test.oss-toolbox.kaiyuanshe.cn',
+            },
+          ],
+      destination: 'https://raw.githubusercontent.com/:path*',
+    },
+  ],
+  afterFiles: [],
+  fallback: [
+    {
+      source: '/article/:path*',
+      destination: `/_next/static/article/:path*`,
+      has: [
+        {
+          type: 'header',
+          key: 'Accept',
+          value: '.*(image|audio|video|application)/.*',
+        },
+      ],
+    },
+  ],
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = withPWA(
   withLess(
@@ -33,46 +107,8 @@ const nextConfig = withPWA(
       output: 'standalone',
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
       transpilePackages: ['@sentry/browser'],
-      webpack: config => {
-        config.plugins.push(
-          new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
-            resource.request = resource.request.replace(/^node:/, '');
-          }),
-        );
-
-        if (
-          statSync('pages/article', {
-            throwIfNoEntry: false,
-          })?.isDirectory() &&
-          readdirSync('pages/article')[0]
-        )
-          config.plugins.push(
-            new CopyPlugin({
-              patterns: [
-                {
-                  from: 'pages/article',
-                  to: 'static/article',
-                },
-              ],
-            }),
-          );
-        return config;
-      },
-      rewrites: () => ({
-        fallback: [
-          {
-            source: '/article/:path*',
-            destination: `/_next/static/article/:path*`,
-            has: [
-              {
-                type: 'header',
-                key: 'Accept',
-                value: '.*(image|audio|video|application)/.*',
-              },
-            ],
-          },
-        ],
-      }),
+      webpack,
+      rewrites,
     }),
   ),
 );
