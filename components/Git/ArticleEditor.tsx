@@ -287,10 +287,10 @@ export class ArticleEditor extends Component {
           <div className="d-flex justify-content-between align-items-center my-2">
             <label>{t('content')}</label>
           </div>
-          {editorContent && (
+          {(!repository || editorContent) && (
             <HTMLEditor
               defaultValue={editorContent}
-              onChange={value => (this.editorContent = value)}
+              onChange={value => (this.editorContent = value || '<br>')}
             />
           )}
         </Form.Group>

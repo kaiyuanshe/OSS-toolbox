@@ -23,9 +23,13 @@ export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
   });
 
 const client_id = process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID!,
-  client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!;
+  client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!,
+  { VERCEL } = process.env;
+
+export const ProxyBaseURL = 'https://test.oss-toolbox.kaiyuanshe.cn/proxy';
 
 export const githubOAuth = githubOAuth2({
+  rootBaseURL: VERCEL ? undefined : `${ProxyBaseURL}/github.com/`,
   client_id,
   client_secret,
   scopes: ['user', 'repo'],
