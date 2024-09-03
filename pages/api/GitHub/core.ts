@@ -22,7 +22,7 @@ export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
     response.send(dataFilter?.(path, data as T) || data);
   });
 
-const client_id = process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID!,
+const client_id = process.env.GITHUB_OAUTH_CLIENT_ID!,
   client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!,
   { VERCEL } = process.env;
 

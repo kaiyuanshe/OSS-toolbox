@@ -11,7 +11,8 @@ import RemarkGfm from 'remark-gfm';
 import RemarkMdxFrontMatter from 'remark-mdx-frontmatter';
 import WP from 'webpack';
 
-const { NODE_ENV, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = process.env;
+const { NODE_ENV, CI, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } =
+  process.env;
 const isDev = NODE_ENV === 'development';
 
 const withMDX = NextMDX({
@@ -86,7 +87,7 @@ const rewrites = async () => ({
 const nextConfig = withPWA(
   withLess(
     withMDX({
-      output: 'standalone',
+      output: CI ? 'standalone' : undefined,
       pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
       transpilePackages: ['@sentry/browser'],
       webpack,
