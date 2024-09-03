@@ -1,4 +1,5 @@
 import { HTTPClient } from 'koajax';
+import { DataObject } from 'mobx-restful';
 
 import { safeAPI } from './core';
 
@@ -25,23 +26,17 @@ export const UserAgent: Record<string, string> = {
     'Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30',
 };
 
-export default safeAPI(
-  async ({ method, url, query, headers, body }, response) => {
-    delete headers.host;
+export default safeAPI(async ({ url, query, headers }, response) => {
+  delete headers.host;
 
-    const UA = UserAgent[query.browser as string];
+  const UA = UserAgent[query.browser as string];
 
-    const { status, body: data } = await polyfillClient.request({
-      // @ts-ignore
-      method,
-      path: url!,
-      // @ts-ignore
-      headers: { ...headers, 'User-Agent': UA },
-      body: body || undefined,
-    });
-
-    response.status(status);
-    response.setHeader('Access-Control-Allow-Headers', '*');
-    response.send(data);
-  },
-);
+  const { status, body: data } = await polyfillClient.get(
+    url!,
+    { ...headers, 'User-Agent': UA } as DataObject,
+    { responseType: 'text' },
+  );
+  response.status(status);
+  response.setHeader('Access-Control-Allow-Headers', '*');
+  response.send(data);
+});
