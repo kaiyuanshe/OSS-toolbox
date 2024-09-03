@@ -9,7 +9,7 @@ import withLess from 'next-with-less';
 import RemarkFrontMatter from 'remark-frontmatter';
 import RemarkGfm from 'remark-gfm';
 import RemarkMdxFrontMatter from 'remark-mdx-frontmatter';
-import wp from 'webpack';
+import WP from 'webpack';
 
 const { NODE_ENV, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = process.env;
 const isDev = NODE_ENV === 'development';
@@ -33,7 +33,7 @@ const withPWA = setPWA({
  */
 const webpack = config => {
   config.plugins.push(
-    new wp.NormalModuleReplacementPlugin(/^node:/, resource => {
+    new WP.NormalModuleReplacementPlugin(/^node:/, resource => {
       resource.request = resource.request.replace(/^node:/, '');
     }),
   );
@@ -59,28 +59,10 @@ const rewrites = async () => ({
   beforeFiles: [
     {
       source: '/proxy/github.com/:path*',
-      has: isDev
-        ? undefined
-        : [
-            {
-              type: 'header',
-              key: 'Host',
-              value: 'test.oss-toolbox.kaiyuanshe.cn',
-            },
-          ],
       destination: 'https://github.com/:path*',
     },
     {
       source: '/proxy/raw.githubusercontent.com/:path*',
-      has: isDev
-        ? undefined
-        : [
-            {
-              type: 'header',
-              key: 'Host',
-              value: 'test.oss-toolbox.kaiyuanshe.cn',
-            },
-          ],
       destination: 'https://raw.githubusercontent.com/:path*',
     },
   ],

@@ -1,10 +1,5 @@
 import { HTTPClient } from 'koajax';
-import {
-  githubClient,
-  RepositoryFilter,
-  RepositoryModel,
-  UserModel,
-} from 'mobx-github';
+import { githubClient, RepositoryModel, UserModel } from 'mobx-github';
 import { parseCookie } from 'mobx-i18n';
 import { toggle } from 'mobx-restful';
 
@@ -50,32 +45,6 @@ export class GitRepositoryModel extends RepositoryModel {
       `${identity}/${ref}/${path}`,
     );
     return body!;
-  }
-
-  async loadNewPage(
-    pageIndex: number,
-    pageSize: number,
-    filter: RepositoryFilter,
-  ) {
-    const { pageData, totalCount } = await this.loadPage(
-      pageIndex,
-      pageSize,
-      filter,
-    );
-    this.pageSize = pageSize;
-
-    const list = [...this.pageList];
-    list[pageIndex - 1] = pageData;
-    this.pageList = list;
-
-    this.totalCount =
-      totalCount != null
-        ? isNaN(totalCount) || totalCount < 0
-          ? Infinity
-          : totalCount
-        : Infinity;
-
-    return { pageData, totalCount };
   }
 }
 
