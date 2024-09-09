@@ -66,6 +66,10 @@ const rewrites = async () => ({
       source: '/proxy/raw.githubusercontent.com/:path*',
       destination: 'https://raw.githubusercontent.com/:path*',
     },
+    {
+      source: '/proxy/geo.datav.aliyun.com/:path*',
+      destination: 'https://geo.datav.aliyun.com/:path*',
+    },
   ],
   afterFiles: [],
   fallback: [
