@@ -43,7 +43,7 @@ const ProjectListPage: FC<{ list: GitRepository[] }> = observer(({ list }) => (
           {allItems.map(
             item =>
               item.homepage && (
-                <Col as="li" key={item.id}>
+                <Col key={item.id} as="li">
                   <GitCard className="h-100 shadow-sm" {...item} />
                 </Col>
               ),

@@ -12,10 +12,10 @@ export default safeAPI(async ({ method, url, headers, body }, response) => {
   console.log(path);
 
   const { status, body: data } = await githubClient.request<ArrayBuffer>({
-    // @ts-ignore
+    // @ts-expect-error KoAJAX type compatibility
     method,
     path,
-    // @ts-ignore
+    // @ts-expect-error KoAJAX type compatibility
     headers,
     body: body || undefined,
     responseType: 'arraybuffer',

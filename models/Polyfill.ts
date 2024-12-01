@@ -2,8 +2,7 @@ import { observable } from 'mobx';
 import { BaseModel, toggle } from 'mobx-restful';
 import { buildURLData } from 'web-utility';
 
-import { PolyfillHost } from '../pages/api/polyfill';
-import { ownClient } from './Base';
+import { ownClient, PolyfillHost } from './Base';
 
 export type JSEnvironment = 'window' | 'worker' | 'node';
 

@@ -1,6 +1,7 @@
 import { githubClient } from 'mobx-github';
 import { githubOAuth2 } from 'next-ssr-middleware';
 
+import { ProxyBaseURL } from '../../../models/Base';
 import { safeAPI } from '../core';
 
 export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
@@ -10,10 +11,10 @@ export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
     const path = url!.slice(`/api/GitHub/`.length);
 
     const { status, body: data } = await githubClient.request<T>({
-      // @ts-ignore
+      // @ts-expect-error KoAJAX type compatibility
       method,
       path,
-      // @ts-ignore
+      // @ts-expect-error KoAJAX type compatibility
       headers,
       body: body || undefined,
     });
@@ -25,8 +26,6 @@ export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
 const client_id = process.env.GITHUB_OAUTH_CLIENT_ID!,
   client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!,
   { VERCEL } = process.env;
-
-export const ProxyBaseURL = 'https://test.oss-toolbox.kaiyuanshe.cn/proxy';
 
 export const githubOAuth = githubOAuth2({
   rootBaseURL: VERCEL ? undefined : `${ProxyBaseURL}/github.com/`,

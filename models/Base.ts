@@ -1,4 +1,8 @@
+import 'core-js/full/array/from-async';
+
 import { HTTPClient } from 'koajax';
+import { githubClient } from 'mobx-github';
+import { parseCookie } from 'mobx-i18n';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -13,4 +17,33 @@ export const API_Host = isServer()
 export const ownClient = new HTTPClient({
   baseURI: `${API_Host}/api/`,
   responseType: 'json',
+});
+
+export const PolyfillHost = 'https://polyfiller.kaiyuanshe.cn';
+
+export const polyfillClient = new HTTPClient({
+  baseURI: PolyfillHost,
+  responseType: 'text',
+});
+
+const GithubToken =
+  parseCookie(globalThis.document?.cookie || '').token ||
+  process.env.GITHUB_TOKEN;
+
+if (!isServer()) githubClient.baseURI = `${API_Host}/api/GitHub/`;
+
+githubClient.use(({ request }, next) => {
+  if (GithubToken)
+    request.headers = {
+      authorization: `Bearer ${GithubToken}`,
+      ...request.headers,
+    };
+  return next();
+});
+
+export const ProxyBaseURL = 'https://test.oss-toolbox.kaiyuanshe.cn/proxy';
+
+export const githubRawClient = new HTTPClient({
+  baseURI: `${ProxyBaseURL}/raw.githubusercontent.com/`,
+  responseType: 'arraybuffer',
 });

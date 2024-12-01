@@ -60,8 +60,8 @@ export class ListField extends Component<FieldProps> {
   }
 
   addItem = (type: string) => {
-    var item: DataMeta = { type, value: [] },
-      { innerValue } = this;
+    let item: DataMeta = { type, value: [] };
+    const { innerValue } = this;
 
     switch (type) {
       case 'string':
@@ -104,7 +104,7 @@ export class ListField extends Component<FieldProps> {
 
     item.key = newKey;
 
-    for (let oldKey in value)
+    for (const oldKey in value)
       if (!children.some(({ key }) => key === oldKey)) {
         value[newKey] = value[oldKey];
 
@@ -168,7 +168,7 @@ export class ListField extends Component<FieldProps> {
           <AddBar onSelect={this.addItem} />
         </li>
         {children.map(({ type, key, value }, index) => (
-          <li className="d-flex align-items-center gap-3" key={key}>
+          <li key={key} className="d-flex align-items-center gap-3">
             {field_type === 'object' && (
               <Form.Control
                 defaultValue={key}
