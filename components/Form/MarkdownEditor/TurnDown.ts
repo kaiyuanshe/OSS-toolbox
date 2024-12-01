@@ -1,5 +1,5 @@
 import TurnDown from 'turndown';
-// @ts-ignore
+// @ts-expect-error no official types
 import { gfm, strikethrough, tables, taskListItems } from 'turndown-plugin-gfm';
 
 const Empty_HREF = /^(#|javascript:\s*void\(0\);?\s*)$/;

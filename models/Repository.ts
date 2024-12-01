@@ -1,32 +1,9 @@
-import { HTTPClient } from 'koajax';
-import { githubClient, RepositoryModel, UserModel } from 'mobx-github';
-import { parseCookie } from 'mobx-i18n';
+import { RepositoryModel, UserModel } from 'mobx-github';
 import { toggle } from 'mobx-restful';
 
-import { ProxyBaseURL } from '../pages/api/GitHub/core';
-import { API_Host, isServer } from './Base';
-
-const GithubToken =
-  parseCookie(globalThis.document?.cookie || '').token ||
-  process.env.GITHUB_TOKEN;
-
-if (!isServer()) githubClient.baseURI = `${API_Host}/api/GitHub/`;
-
-githubClient.use(({ request }, next) => {
-  if (GithubToken)
-    request.headers = {
-      authorization: `Bearer ${GithubToken}`,
-      ...request.headers,
-    };
-  return next();
-});
+import { githubRawClient } from './Base';
 
 export class GitRepositoryModel extends RepositoryModel {
-  downloader = new HTTPClient({
-    baseURI: `${ProxyBaseURL}/raw.githubusercontent.com/`,
-    responseType: 'arraybuffer',
-  });
-
   @toggle('downloading')
   async downloadRaw(
     path: string,
@@ -41,7 +18,7 @@ export class GitRepositoryModel extends RepositoryModel {
 
       ref = default_branch;
     }
-    const { body } = await this.downloader.get<ArrayBuffer>(
+    const { body } = await githubRawClient.get<ArrayBuffer>(
       `${identity}/${ref}/${path}`,
     );
     return body!;

@@ -1,14 +1,7 @@
-import { HTTPClient } from 'koajax';
 import { DataObject } from 'mobx-restful';
 
+import { polyfillClient } from '../../models/Base';
 import { safeAPI } from './core';
-
-export const PolyfillHost = 'https://polyfiller.kaiyuanshe.cn';
-
-export const polyfillClient = new HTTPClient({
-  baseURI: PolyfillHost,
-  responseType: 'text',
-});
 
 export const UserAgent: Record<string, string> = {
   'IE 11':

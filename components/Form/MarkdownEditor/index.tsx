@@ -34,22 +34,19 @@ export class MarkdownEditor extends Component<EditorProps> {
   constructor(props: EditorProps) {
     super(props);
 
-    for (let key in props.rules) this.convertor.addRule(key, props.rules[key]);
+    for (const key in props.rules)
+      this.convertor.addRule(key, props.rules[key]);
   }
 
   async componentDidMount() {
     const MarkdownIME = await import('markdown-ime');
-    // @ts-ignore
+    // @ts-expect-error official type error
     MarkdownIME.Enhance(this.root);
   }
 
-  countText = debounce(() => {
-    var count = 0;
-
-    if (this.root) count = (this.root.textContent || '').trim().length;
-
-    this.count = count;
-  });
+  countText = debounce(
+    () => (this.count = this.root?.textContent?.trim().length || 0),
+  );
 
   private manualChange() {
     this.countText();
@@ -86,7 +83,7 @@ export class MarkdownEditor extends Component<EditorProps> {
 
     event.preventDefault();
 
-    var list: DataTransferItem[] = Array.from(items);
+    let list: DataTransferItem[] = Array.from(items);
 
     if (list.find(({ type }) => /xml|html/.test(type)))
       list = list.filter(({ type }) => type !== 'text/plain');
@@ -128,8 +125,8 @@ export class MarkdownEditor extends Component<EditorProps> {
   render() {
     return (
       <div
-        contentEditable
         ref={this.contentEditable}
+        contentEditable
         className={classNames(
           'form-control',
           'markdown-body',

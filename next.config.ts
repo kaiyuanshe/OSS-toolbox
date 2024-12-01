@@ -2,9 +2,9 @@ import NextMDX from '@next/mdx';
 import { withSentryConfig } from '@sentry/nextjs';
 import CopyPlugin from 'copy-webpack-plugin';
 import { readdirSync, statSync } from 'fs';
-// @ts-ignore
+import { NextConfig } from 'next';
 import setPWA from 'next-pwa';
-// @ts-ignore
+// @ts-expect-error no official types
 import withLess from 'next-with-less';
 import RemarkFrontMatter from 'remark-frontmatter';
 import RemarkGfm from 'remark-gfm';
@@ -29,10 +29,7 @@ const withPWA = setPWA({
   disable: isDev,
 });
 
-/**
- * @type {import('next').NextConfig['webpack']}
- */
-const webpack = config => {
+const webpack: NextConfig['webpack'] = config => {
   config.plugins.push(
     new WP.NormalModuleReplacementPlugin(/^node:/, resource => {
       resource.request = resource.request.replace(/^node:/, '');
@@ -53,10 +50,7 @@ const webpack = config => {
   return config;
 };
 
-/**
- * @type {import('next').NextConfig['rewrites']}
- */
-const rewrites = async () => ({
+const rewrites: NextConfig['rewrites'] = async () => ({
   beforeFiles: [
     {
       source: '/proxy/github.com/:path*',
@@ -87,7 +81,6 @@ const rewrites = async () => ({
   ],
 });
 
-/** @type {import('next').NextConfig} */
 const nextConfig = withPWA(
   withLess(
     withMDX({

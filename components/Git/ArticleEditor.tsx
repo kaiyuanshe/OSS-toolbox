@@ -101,7 +101,7 @@ export class ArticleEditor extends Component {
 
       return;
     }
-    var content = (await readAs(data, 'text').result) as string;
+    let content = (await readAs(data, 'text').result) as string;
 
     if (fileType.JSON.includes(type)) return (this.meta = JSON.parse(content));
 
@@ -136,7 +136,7 @@ export class ArticleEditor extends Component {
       root = document.querySelector('div[contenteditable]');
 
     if (root)
-      for (let element of root.querySelectorAll<HyperLink>('[href], [src]')) {
+      for (const element of root.querySelectorAll<HyperLink>('[href], [src]')) {
         let URI =
           element instanceof HTMLAnchorElement ? element.href : element.src;
 
@@ -163,7 +163,7 @@ export class ArticleEditor extends Component {
 
     if (fileType.MarkDown.includes(type) && editorContent) {
       if (!meta) return editorContent;
-      // @ts-ignore
+
       meta.updated = formatDate();
 
       return `---
@@ -178,7 +178,7 @@ export class ArticleEditor extends Component {
     event.preventDefault();
 
     const { currentRepository, repositoryStore, editorContent } = this,
-      // @ts-ignore
+      // @ts-expect-error DOM API shortcut
       { message } = event.currentTarget.elements;
 
     if (!editorContent) return;
@@ -189,7 +189,7 @@ export class ArticleEditor extends Component {
       ({ src }) => new URL(src).protocol === 'blob:',
     );
 
-    for (let file of media) {
+    for (const file of media) {
       const blob = await blobOf(file.src);
 
       const filePath = this.path.replace(
