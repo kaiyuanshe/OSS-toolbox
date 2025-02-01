@@ -9,9 +9,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { GitCard } from '../components/Git/Card';
 import { PageHead } from '../components/PageHead';
 import { repositoryStore } from '../models/Repository';
-import { i18n } from '../models/Translation';
-
-const { t } = i18n;
+import { i18n, t } from '../models/Translation';
 
 export const getServerSideProps = compose(
   cache(),

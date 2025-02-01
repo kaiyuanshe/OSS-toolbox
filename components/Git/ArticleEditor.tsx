@@ -12,12 +12,11 @@ import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
-import { i18n } from '../../models/Translation';
+import { t } from '../../models/Translation';
 import { ListField } from '../Form/JSONEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
 
-const { t } = i18n;
 const HTMLEditor = dynamic(() => import('../Form/HTMLEditor'), { ssr: false });
 
 export const fileType = {
