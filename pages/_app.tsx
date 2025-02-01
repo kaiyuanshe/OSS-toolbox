@@ -11,13 +11,11 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import { MainNavigator } from '../components/MainNavigator';
 import { MDXLayout } from '../components/MDXLayout';
 import { isServer } from '../models/Base';
-import { i18n } from '../models/Translation';
+import { t } from '../models/Translation';
 
 configure({ enforceActions: 'never' });
 
 enableStaticRendering(isServer());
-
-const { t } = i18n;
 
 const AppShell: FC<AppProps> = observer(({ Component, pageProps, router }) => (
   <>

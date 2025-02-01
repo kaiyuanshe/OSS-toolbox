@@ -1,8 +1,6 @@
 import { FeatureAttitude, InfectionRange } from 'license-filter';
 
-import { i18n } from '../../models/Translation';
-
-const { t } = i18n;
+import { t } from '../../models/Translation';
 
 type OptionValue = Record<string, { value: number; text: string }[]>;
 

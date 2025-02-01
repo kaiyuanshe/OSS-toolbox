@@ -16,14 +16,12 @@ import {
 
 import { licenseTips, optionValue } from '../components/License/helper';
 import { PageHead } from '../components/PageHead';
-import { i18n } from '../models/Translation';
+import { t } from '../models/Translation';
 
 interface List {
   license: License;
   score: number;
 }
-
-const { t } = i18n;
 
 const choiceSteps = [
   'popularity',

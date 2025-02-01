@@ -17,12 +17,10 @@ import {
 import { PageHead } from '../components/PageHead';
 import { PolyfillHost } from '../models/Base';
 import polyfillStore from '../models/Polyfill';
-import { i18n } from '../models/Translation';
+import { i18n, t } from '../models/Translation';
 import { UserAgent } from './api/polyfill';
 
 export const getServerSideProps = compose(translator(i18n));
-
-const { t } = i18n;
 
 @observer
 export default class PolyfillPage extends Component {

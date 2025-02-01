@@ -9,7 +9,7 @@ import { Breadcrumb, Container, Row } from 'react-bootstrap';
 import { IssueModule } from '../components/Git/Issue/IssueModule';
 import { PageHead } from '../components/PageHead';
 import { repositoryStore } from '../models/Repository';
-import { i18n } from '../models/Translation';
+import { i18n, t } from '../models/Translation';
 
 export const getServerSideProps = compose(
   cache(),
@@ -22,8 +22,6 @@ export const getServerSideProps = compose(
     return { props: JSON.parse(JSON.stringify({ list })) };
   },
 );
-
-const { t } = i18n;
 
 const IssuesPage: FC<{ list: GitRepository[] }> = observer(({ list }) => (
   <Container className="py-5">

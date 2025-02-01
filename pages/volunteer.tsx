@@ -1,7 +1,7 @@
 import { Contributor } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { InferGetServerSidePropsType } from 'next';
-import { cache, compose, errorLogger } from 'next-ssr-middleware';
+import { cache, compose, errorLogger, translator } from 'next-ssr-middleware';
 import { FC } from 'react';
 import { Container, Row } from 'react-bootstrap';
 
@@ -9,15 +9,19 @@ import { PageHead } from '../components/PageHead';
 import { PersonCard } from '../components/PersonCard';
 import { SectionTitle } from '../components/SectionTitle';
 import { repositoryStore } from '../models/Repository';
-import { i18n } from '../models/Translation';
+import { i18n, t } from '../models/Translation';
 
-const { t } = i18n;
+export const getServerSideProps = compose(
+  cache(),
+  errorLogger,
+  translator(i18n),
+  async () => {
+    const contributors: Contributor[] =
+      await repositoryStore.getAllContributors();
 
-export const getServerSideProps = compose(cache(), errorLogger, async () => {
-  const contributors: Contributor[] =
-    await repositoryStore.getAllContributors();
-  return { props: { contributors } };
-});
+    return { props: { contributors } };
+  },
+);
 
 const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> =
   observer(({ contributors }) => (
@@ -31,7 +35,8 @@ const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> =
         <a
           className="d-block"
           href="https://next.ossinsight.io/widgets/official/compose-org-participants-roles-ratio?owner_id=11659327&period=past_28_days"
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           <picture>
             <source
@@ -49,7 +54,8 @@ const Organizer: FC<InferGetServerSidePropsType<typeof getServerSideProps>> =
         <a
           className="d-block"
           href="https://next.ossinsight.io/widgets/official/compose-org-engagement-scatter?owner_id=11659327&period=past_28_days"
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           <picture>
             <source
