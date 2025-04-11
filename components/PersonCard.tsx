@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { Badge, Card, Col } from 'react-bootstrap';
 
-export type PersonCardProps = {
+export interface PersonCardProps {
   avatar: string;
   name: string;
   link?: string;
   position?: string;
   count?: number;
-};
+}
 
 export const PersonCard: FC<PersonCardProps> = ({
   avatar,

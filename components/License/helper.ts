@@ -34,6 +34,7 @@ export const optionValue = () => {
         text: t('feature_attitude_negative'),
       },
     ];
+
     return optionValue;
   }, {} as OptionValue);
 

@@ -19,6 +19,7 @@ export const getServerSideProps = compose(
     const list = await new RepositoryModel('kaiyuanshe').getList({
       relation: ['languages'],
     });
+
     return { props: JSON.parse(JSON.stringify({ list })) };
   },
 );

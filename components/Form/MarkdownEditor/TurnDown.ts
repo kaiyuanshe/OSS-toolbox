@@ -31,6 +31,7 @@ export default new TurnDown({
       const content = [src || firstSet, title && JSON.stringify(title)].filter(
         Boolean,
       );
+
       return `![${alt}](${content.join(' ')})`;
     },
   })

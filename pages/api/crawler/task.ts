@@ -7,7 +7,7 @@ export interface CrawlerTask {
   title?: string;
 }
 
-const CRAWLER_TOKEN = process.env.CRAWLER_TOKEN;
+const { CRAWLER_TOKEN } = process.env;
 
 export default safeAPI(async ({ method, headers, body }, response) => {
   if (

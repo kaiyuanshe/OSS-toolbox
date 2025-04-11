@@ -15,7 +15,9 @@ import { insertToCursor, parseDOM } from 'web-utility';
 import STYLE from './index.module.less';
 import turnDown from './TurnDown';
 
-export type EditorProps = { rules?: any };
+export interface EditorProps {
+  rules?: any;
+}
 
 type InputHandler = (event: FormEvent) => void;
 
@@ -109,6 +111,7 @@ export class MarkdownEditor extends Component<EditorProps> {
               return `<video src=${src}></video>`;
           }
         }
+
         return '';
       }),
     );

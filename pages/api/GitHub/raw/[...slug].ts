@@ -6,10 +6,7 @@ import { safeAPI } from '../../core';
 export default safeAPI(async ({ method, url, headers, body }, response) => {
   delete headers.host;
 
-  const path =
-    'https://raw.githubusercontent.com/' +
-    url!.slice(`/api/GitHub/raw/`.length);
-  console.log(path);
+  const path = `https://raw.githubusercontent.com/${url!.slice(`/api/GitHub/raw/`.length)}`;
 
   const { status, body: data } = await githubClient.request<ArrayBuffer>({
     // @ts-expect-error KoAJAX type compatibility

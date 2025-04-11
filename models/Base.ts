@@ -2,7 +2,6 @@ import 'core-js/full/array/from-async';
 
 import { HTTPClient } from 'koajax';
 import { githubClient } from 'mobx-github';
-import { parseCookie } from 'mobx-i18n';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -27,7 +26,7 @@ export const polyfillClient = new HTTPClient({
 });
 
 const GithubToken =
-  parseCookie(globalThis.document?.cookie || '').token ||
+  (globalThis.location && new URLSearchParams(location.search).get('token')) ||
   process.env.GITHUB_TOKEN;
 
 if (!isServer()) githubClient.baseURI = `${API_Host}/api/GitHub/`;

@@ -93,7 +93,7 @@ export class ArticleEditor extends Component {
     this.currentFileURL = URL;
     this.reset();
 
-    const type = URL.split('.').slice(-1)[0];
+    const type = URL.split('.').at(-1)!;
 
     if (!(data instanceof Blob)) {
       if (fileType.MarkDown.includes(type)) await this.setPostMeta();
@@ -131,7 +131,7 @@ export class ArticleEditor extends Component {
 
   fixURL = debounce(() => {
     const { repository } = this,
-      pageURL = window.location.href.split('?')[0],
+      [pageURL] = window.location.href.split('?'),
       root = document.querySelector('div[contenteditable]');
 
     if (root)
@@ -153,7 +153,7 @@ export class ArticleEditor extends Component {
   });
 
   getContent() {
-    const type = this.currentFileURL.split('.').slice(-1)[0],
+    const type = this.currentFileURL.split('.').at(-1)!,
       { meta, editorContent } = this;
 
     if (fileType.JSON.includes(type)) return JSON.stringify(meta);

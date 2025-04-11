@@ -10,6 +10,7 @@ export interface DataMeta {
   type: string;
   key?: string | number;
   value: any;
+  // eslint-disable-next-line no-restricted-syntax
   children?: DataMeta[];
 }
 
@@ -109,6 +110,7 @@ export class ListField extends Component<FieldProps> {
         value[newKey] = value[oldKey];
 
         delete value[oldKey];
+
         return;
       }
 
