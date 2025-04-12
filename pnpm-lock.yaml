@@ -40,8 +40,8 @@ importers:
         specifier: ^20.4.1
         version: 20.4.1
       idea-react:
-        specifier: ^2.0.0-rc.9
-        version: 2.0.0-rc.9(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        specifier: ^2.0.0-rc.10
+        version: 2.0.0-rc.10(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       koajax:
         specifier: ^3.1.2
         version: 3.1.2(core-js@3.41.0)(typescript@5.8.3)
@@ -79,8 +79,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0(core-js@3.41.0)(mobx@6.13.7)(typescript@5.8.3)
       mobx-restful-table:
-        specifier: ^2.0.2
-        version: 2.0.2(@types/react@19.1.1)(core-js@3.41.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        specifier: ^2.1.0-rc.2
+        version: 2.1.0-rc.2(@types/react@19.1.1)(core-js@3.41.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       next:
         specifier: ^15.3.0
         version: 15.3.0(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -93,9 +93,6 @@ importers:
       next-with-less:
         specifier: ^3.0.1
         version: 3.0.1(less-loader@12.2.0(less@4.3.0)(webpack@5.99.5))(less@4.3.0)(next@15.3.0(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
-      primereact:
-        specifier: ^10.9.4
-        version: 10.9.4(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -3291,8 +3288,8 @@ packages:
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
 
-  idea-react@2.0.0-rc.9:
-    resolution: {integrity: sha512-TnjEwoBzJ/yVyMZf9z1NGt8TH1oTeKwIlstyK11DisDdkgl/zArmGaitjfxP8/ZNn/2XOi5/bSpPorYfBf1KYg==}
+  idea-react@2.0.0-rc.10:
+    resolution: {integrity: sha512-uUJjGd7+Jur9bGAeveGlLXAslkPvW2KfQ/xezE8dKEbBQlGGlRoBbLZbTAvP589HBxOsWJ9WHzK2gzEd4YsJeA==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -4056,8 +4053,8 @@ packages:
       react-native:
         optional: true
 
-  mobx-restful-table@2.0.2:
-    resolution: {integrity: sha512-hA3X36asGUl6poLSTRAhB+kcf/CHiq2R5wU+vTfaKL/lincQCe7ixruORldSDwgbiRqCTB/2MotPo7xXzLZ8IA==}
+  mobx-restful-table@2.1.0-rc.2:
+    resolution: {integrity: sha512-GaiCmw5L5z10uDRKCj3jKZGhLQtS2Q6db3/MRR6F7BiNHiVScVdL+uOwqQChubQutYHbLmYYXhHI3Zloo/TtzA==}
     peerDependencies:
       react: '>=16.8'
 
@@ -4396,17 +4393,6 @@ packages:
   pretty-bytes@5.6.0:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
     engines: {node: '>=6'}
-
-  primereact@10.9.4:
-    resolution: {integrity: sha512-GMrelh07Wd1cwKjHpay3LCpwP346D43qBVkt8H/anGYC3z7kv5/AP0pizZv+aGQs2Fg5ufTTf+SI7IKWmyzgGg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   prismjs@1.30.0:
     resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
@@ -8997,7 +8983,7 @@ snapshots:
 
   idb@7.1.1: {}
 
-  idea-react@2.0.0-rc.9(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3):
+  idea-react@2.0.0-rc.10(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3):
     dependencies:
       '@editorjs/editorjs': 2.30.8
       '@editorjs/paragraph': 2.11.7
@@ -10054,7 +10040,7 @@ snapshots:
     optionalDependencies:
       react-dom: 19.1.0(react@19.1.0)
 
-  mobx-restful-table@2.0.2(@types/react@19.1.1)(core-js@3.41.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3):
+  mobx-restful-table@2.1.0-rc.2(@types/react@19.1.1)(core-js@3.41.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3):
     dependencies:
       '@swc/helpers': 0.5.17
       classnames: 2.5.1
@@ -10401,15 +10387,6 @@ snapshots:
   prettier@3.5.3: {}
 
   pretty-bytes@5.6.0: {}
-
-  primereact@10.9.4(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      '@types/react-transition-group': 4.4.12(@types/react@19.1.1)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      react-transition-group: 4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.1
 
   prismjs@1.30.0: {}
 

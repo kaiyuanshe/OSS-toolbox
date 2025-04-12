@@ -1,8 +1,15 @@
-import { observable } from 'mobx';
-import { BaseModel, toggle } from 'mobx-restful';
-import { buildURLData } from 'web-utility';
+import { computed, observable } from 'mobx';
+import {
+  Filter,
+  ListModel,
+  persist,
+  restore,
+  Stream,
+  toggle,
+} from 'mobx-restful';
+import { buildURLData, Day, isEmpty } from 'web-utility';
 
-import { ownClient, PolyfillHost } from './Base';
+import { isServer, ownClient, polyfillClient, PolyfillHost } from './Base';
 
 export type JSEnvironment = 'window' | 'worker' | 'node';
 
@@ -28,16 +35,23 @@ export interface LocalLibrary extends Library {
   localPaths: string[];
 }
 
-export interface Alias {
+export interface LibrarySuite {
   polyfills: string[];
 }
 
 export type PolyfillIndex = Record<
   string,
-  RemoteLibrary | LocalLibrary | Alias
+  RemoteLibrary | LocalLibrary | LibrarySuite
 >;
 
-export class PolyfillModel extends BaseModel {
+export interface Polyfill extends Library {
+  name: string;
+}
+
+export class PolyfillModel extends Stream<Polyfill>(ListModel) {
+  client = polyfillClient;
+
+  @persist({ expireIn: Day })
   @observable
   accessor index: PolyfillIndex = {};
 
@@ -45,23 +59,42 @@ export class PolyfillModel extends BaseModel {
   accessor currentUA = '';
 
   @observable
+  accessor currentFeatures: string[] = [];
+
+  @computed
+  get polyfillURL() {
+    return `${PolyfillHost}/api/polyfill?features=${this.currentFeatures}`;
+  }
+
+  @observable
   accessor sourceCode = '';
 
-  @toggle('downloading')
-  async getIndex() {
-    const { body } = await ownClient.get<PolyfillIndex>(
-      `${PolyfillHost}/index.json`,
-    );
-    return (this.index = body!);
+  restored = !isServer() && restore(this, 'Polyfill');
+
+  async *openStream({ name: keyword }: Filter<Polyfill>) {
+    await this.restored;
+
+    if (isEmpty(this.index)) {
+      const { body } = await this.client.get<PolyfillIndex>(`index.json`);
+
+      this.index = body!;
+    }
+    for (const [name, meta] of Object.entries(this.index))
+      if (!('polyfills' in meta) && (!keyword || name.includes(keyword)))
+        yield { name, ...meta };
   }
 
   @toggle('downloading')
   async getSourceCode(browser: string, features: string[]) {
-    const response = await fetch(
-      `/api/polyfill?${buildURLData({ browser, features })}`,
+    const { body } = await ownClient.get<string>(
+      `polyfill?${buildURLData({ browser, features })}`,
+      {},
+      { responseType: 'text' },
     );
     this.currentUA = browser;
-    return (this.sourceCode = await response.text());
+    this.currentFeatures = features;
+
+    return (this.sourceCode = body!);
   }
 }
 

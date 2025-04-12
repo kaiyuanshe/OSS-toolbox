@@ -1,21 +1,13 @@
-import { Loading } from 'idea-react';
-import { computed, observable } from 'mobx';
+import { CodeBlock, Loading } from 'idea-react';
 import { textJoin } from 'mobx-i18n';
 import { observer } from 'mobx-react';
+import { SearchableInput } from 'mobx-restful-table';
 import { compose, translator } from 'next-ssr-middleware';
-import { Tree, TreeCheckboxSelectionKeys } from 'primereact/tree';
-import { TreeNode } from 'primereact/treenode';
-import { Component } from 'react';
-import {
-  Accordion,
-  Card,
-  Container,
-  Dropdown,
-  DropdownButton,
-} from 'react-bootstrap';
+import { Component, FormEvent } from 'react';
+import { Card, Container, Dropdown, DropdownButton } from 'react-bootstrap';
+import { formToJSON } from 'web-utility';
 
 import { PageHead } from '../components/PageHead';
-import { PolyfillHost } from '../models/Base';
 import polyfillStore from '../models/Polyfill';
 import { i18n, t } from '../models/Translation';
 import { UserAgent } from './api/polyfill';
@@ -24,36 +16,25 @@ export const getServerSideProps = compose(translator(i18n));
 
 @observer
 export default class PolyfillPage extends Component {
-  @computed
-  get options() {
-    return Object.entries(polyfillStore.index)
-      .map(([key, data]) => !('polyfills' in data) && { key, label: key, data })
-      .filter(Boolean) as TreeNode[];
-  }
+  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  @observable
-  accessor selectOptions: TreeCheckboxSelectionKeys = {};
+    const { features } = formToJSON<{ features: string[] }>(
+        event.currentTarget,
+      ),
+      { submitter } = event.nativeEvent as SubmitEvent;
 
-  @computed
-  get features() {
-    return Object.keys(this.selectOptions);
-  }
-
-  @computed
-  get polyfillURL() {
-    return `${PolyfillHost}/api/polyfill?features=${this.features}`;
-  }
-
-  componentDidMount() {
-    polyfillStore.getIndex();
-  }
+    polyfillStore.getSourceCode(submitter!.textContent!.trim(), features);
+  };
 
   renderContent() {
-    const { options, selectOptions, features, polyfillURL } = this,
-      { currentUA, sourceCode } = polyfillStore;
+    const { currentUA, polyfillURL, sourceCode } = polyfillStore;
 
     return (
-      <main className="d-flex flex-column gap-3 mb-3">
+      <form
+        className="d-flex flex-column gap-3 mb-3"
+        onSubmit={this.handleSubmit}
+      >
         <header className="d-flex justify-content-around align-items-center">
           <h1>{t('Web_polyfill_CDN')}</h1>
 
@@ -61,45 +42,32 @@ export default class PolyfillPage extends Component {
             title={textJoin(t('select_compatible_browser'), currentUA)}
           >
             {Object.entries(UserAgent).map(([name, value]) => (
-              <Dropdown.Item
-                key={name}
-                title={value}
-                onClick={() => polyfillStore.getSourceCode(name, features)}
-              >
+              <Dropdown.Item key={name} title={value} as="button" type="submit">
                 {name}
               </Dropdown.Item>
             ))}
           </DropdownButton>
         </header>
 
-        <Accordion>
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>{t('select_features')}</Accordion.Header>
-            <Accordion.Body>
-              <Tree
-                filterPlaceholder={t('search_feature')}
-                filter
-                selectionMode="checkbox"
-                value={options}
-                selectionKeys={selectOptions}
-                onSelectionChange={({ value }) =>
-                  (this.selectOptions = value as TreeCheckboxSelectionKeys)
-                }
-              />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
-
+        <SearchableInput
+          translator={i18n}
+          store={polyfillStore}
+          labelKey="name"
+          valueKey="name"
+          name="features"
+          placeholder={t('search_feature')}
+          onChange={console.info}
+        />
         <Card body>
           <a target="_blank" href={polyfillURL} rel="noreferrer">
             {polyfillURL}
           </a>
           <hr />
-          <pre className="vh-100 overflow-auto">
-            <code>{sourceCode}</code>
-          </pre>
+          <CodeBlock className="vh-100 overflow-auto" language="javascript">
+            {sourceCode}
+          </CodeBlock>
         </Card>
-      </main>
+      </form>
     );
   }
 
@@ -111,11 +79,7 @@ export default class PolyfillPage extends Component {
         <PageHead title={t('Web_polyfill_CDN')}>
           <link
             rel="stylesheet"
-            href="https://unpkg.com/primereact/resources/primereact.min.css"
-          />
-          <link
-            rel="stylesheet"
-            href="https://unpkg.com/primereact/resources/themes/bootstrap4-light-blue/theme.css"
+            href="https://unpkg.com/prismjs@1.30.0/themes/prism.min.css"
           />
         </PageHead>
 

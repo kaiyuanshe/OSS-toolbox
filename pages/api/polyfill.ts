@@ -24,12 +24,13 @@ export default safeAPI(async ({ url, query, headers }, response) => {
 
   const UA = UserAgent[query.browser as string];
 
-  const { status, body: data } = await polyfillClient.get(
-    url!,
-    { ...headers, 'User-Agent': UA } as DataObject,
-    { responseType: 'text' },
-  );
+  const { status, body: data } = await polyfillClient.get(url!, {
+    ...headers,
+    'User-Agent': UA,
+  } as DataObject);
+
   response.status(status);
   response.setHeader('Access-Control-Allow-Headers', '*');
+  response.setHeader('Content-Type', 'text/javascript');
   response.send(data);
 });
