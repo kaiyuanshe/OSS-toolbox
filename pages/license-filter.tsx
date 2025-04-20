@@ -148,15 +148,14 @@ function renderInfo({ link, feature }: License) {
       [FeatureAttitude.Undefined]: t('option_undefined'),
     })[attitude] || t('option_undefined');
 
-  const judgeInfectionRange = (infectionRange: InfectionRange | undefined) => {
-    return infectionRange !== undefined
+  const judgeInfectionRange = (infectionRange: InfectionRange | undefined) =>
+    infectionRange !== undefined
       ? {
           [InfectionRange.Library]: t('range_library'),
           [InfectionRange.File]: t('range_file'),
           [InfectionRange.Module]: t('range_module'),
         }[infectionRange]
       : t('option_undefined');
-  };
 
   return (
     <>

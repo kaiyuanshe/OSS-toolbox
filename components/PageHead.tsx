@@ -16,9 +16,7 @@ export const PageHead: FC<PageHeadProps> = observer(
   ({ title, description = Summary, children }) => (
     <Head>
       <title>
-        {title}
-        {title && ' - '}
-        {t('open_source_treasure_box')}
+        {`${title ? `${title} - ` : ''}${t('open_source_treasure_box')}`}
       </title>
 
       {description && <meta name="description" content={description} />}
