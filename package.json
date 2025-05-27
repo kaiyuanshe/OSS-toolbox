@@ -26,7 +26,7 @@
     "markdown-ime": "^1.0.3",
     "marked": "^15.0.12",
     "mobx": "^6.13.7",
-    "mobx-github": "^0.3.5",
+    "mobx-github": "^0.3.11",
     "mobx-i18n": "^0.7.1",
     "mobx-react": "^9.2.0",
     "mobx-react-helper": "^0.4.1",

@@ -1,10 +1,9 @@
-import Router, { RouterParamContext } from '@koa/router';
 import { JsonWebTokenError, sign } from 'jsonwebtoken';
 import { Context, Middleware, ParameterizedContext } from 'koa';
 import JWT from 'koa-jwt';
 import { HTTPError } from 'koajax';
 import { DataObject } from 'mobx-restful';
-import { KoaOption, withKoa, withKoaRouter } from 'next-ssr-middleware';
+import { KoaOption, withKoa } from 'next-ssr-middleware';
 import { parse } from 'yaml';
 
 import { CrawlerEmail, JWT_SECRET } from '../../models/configuration';
@@ -56,11 +55,6 @@ export const safeAPI: Middleware<any, any> = async (context: Context, next) => {
 
 export const withSafeKoa = <S, C>(...middlewares: Middleware<S, C>[]) =>
   withKoa<S, C>({} as KoaOption, safeAPI, ...middlewares);
-
-export const withSafeKoaRouter = <S, C extends RouterParamContext<S>>(
-  router: Router<S, C>,
-  ...middlewares: Middleware<S, C>[]
-) => withKoaRouter<S, C>({} as KoaOption, router, safeAPI, ...middlewares);
 
 export interface ArticleMeta {
   name: string;

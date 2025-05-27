@@ -1,13 +1,11 @@
+import { Middleware } from 'koa';
 import { DataObject } from 'mobx-restful';
-import { createKoaRouter } from 'next-ssr-middleware';
 
 import { polyfillClient } from '../../models/Base';
 import { UserAgent } from '../../models/configuration';
-import { withSafeKoaRouter } from './core';
+import { withSafeKoa } from './core';
 
-const router = createKoaRouter(import.meta.url);
-
-router.all('/(.*)', async context => {
+const middleware: Middleware = async context => {
   const { url, query, headers } = context;
 
   delete headers.host;
@@ -23,6 +21,6 @@ router.all('/(.*)', async context => {
   context.set('Access-Control-Allow-Headers', '*');
   context.set('Content-Type', 'text/javascript');
   context.body = data;
-});
+};
 
-export default withSafeKoaRouter(router);
+export default withSafeKoa(middleware);

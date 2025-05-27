@@ -1,3 +1,5 @@
+import { parseCookie } from 'mobx-i18n';
+
 export const Summary = process.env.NEXT_PUBLIC_SITE_SUMMARY;
 
 export const isServer = () => typeof window === 'undefined';
@@ -28,9 +30,7 @@ export const UserAgent: Record<string, string> = {
 
 export const ProxyBaseURL = 'https://test.oss-toolbox.kaiyuanshe.cn/proxy';
 
-export const GithubToken =
-  (globalThis.location && new URLSearchParams(location.search).get('token')) ||
-  process.env.GITHUB_TOKEN;
+export const GithubToken = (globalThis.document && parseCookie().token) || process.env.GITHUB_TOKEN;
 
 export const CACHE_HOST = process.env.NEXT_PUBLIC_CACHE_HOST!,
   CrawlerEmail = `crawler@kaiyuanshe.cn`;

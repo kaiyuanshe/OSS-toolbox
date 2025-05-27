@@ -70,8 +70,8 @@ importers:
         specifier: ^6.13.7
         version: 6.13.7
       mobx-github:
-        specifier: ^0.3.5
-        version: 0.3.5(core-js@3.42.0)(typescript@5.8.3)
+        specifier: ^0.3.11
+        version: 0.3.11(core-js@3.42.0)(typescript@5.8.3)
       mobx-i18n:
         specifier: ^0.7.1
         version: 0.7.1(mobx@6.13.7)(typescript@5.8.3)
@@ -1356,8 +1356,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@octokit/openapi-types@22.2.0':
-    resolution: {integrity: sha512-QBhVjcUa9W7Wwhm6DBFu6ZZ+1/t/oYxqc2tp81Pi41YNuJinbFRx8B133qVOrAaBbF7D/m0Et6f9/pZt9Rc+tg==}
+  '@octokit/openapi-types@25.1.0':
+    resolution: {integrity: sha512-idsIggNXUKkk0+BExUn1dQ92sfysJrje03Q0bv0e+KPLrvyqZF8MnBpFz8UNfYDwB3Ie7Z0TByjWfzxt7vseaA==}
 
   '@opentelemetry/api-logs@0.57.2':
     resolution: {integrity: sha512-uIX52NnTM0iBh84MShlpouI7UKqkZ7MrUszTmaypHBu4r7NofznSnQRfJ+uUeDtQDj6w8eFGg5KBLDAwAPz1+A==}
@@ -4206,8 +4206,8 @@ packages:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  mobx-github@0.3.5:
-    resolution: {integrity: sha512-7F2hErcsHTeBLRyVg7n+Vtm/Ftf94DPn35JwX05igjppvWB9t1tV2cZ2bGzv5NFKhvC49ArWDEzOx9IaQLqgHA==}
+  mobx-github@0.3.11:
+    resolution: {integrity: sha512-xbad5SNMmVJBKoWTnkUxzObSWQI/olk3Iy6ai2LWEbou2hfpQVre0/FaejQs593cNyheQl1RULdKctOcB4EbyQ==}
 
   mobx-i18n@0.7.1:
     resolution: {integrity: sha512-J8iTlxkj19Rh75gst5IvNl8LnlBQVIRV7FAt8yaLBRhSSe4jaZxlDMwXiv0wuBZ6SUD71KYw1w4YTMAorL3O5w==}
@@ -6857,7 +6857,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@octokit/openapi-types@22.2.0': {}
+  '@octokit/openapi-types@25.1.0': {}
 
   '@opentelemetry/api-logs@0.57.2':
     dependencies:
@@ -10465,9 +10465,9 @@ snapshots:
 
   minipass@7.1.2: {}
 
-  mobx-github@0.3.5(core-js@3.42.0)(typescript@5.8.3):
+  mobx-github@0.3.11(core-js@3.42.0)(typescript@5.8.3):
     dependencies:
-      '@octokit/openapi-types': 22.2.0
+      '@octokit/openapi-types': 25.1.0
       '@swc/helpers': 0.5.17
       '@types/lodash': 4.17.17
       koajax: 3.1.2(core-js@3.42.0)(typescript@5.8.3)

@@ -8,7 +8,7 @@ import { IssueCard } from './Card';
 export const IssueModule: FC<GitRepository> = ({ name, language, issues }) => (
   <Accordion.Item eventKey={name}>
     <Accordion.Header>
-      <Row className="align-items-center gx-3">
+      <Row className="flex-fill align-items-center gx-3">
         <Col xs={4} sm={2}>
           {language && (
             <Badge className="fs-6" bg={text2color(language, ['light'])}>

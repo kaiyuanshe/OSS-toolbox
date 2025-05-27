@@ -1,8 +1,8 @@
-import { createKoaRouter } from 'next-ssr-middleware';
+import { createKoaRouter, withKoaRouter } from 'next-ssr-middleware';
 
 import { githubClient } from '../../../models/Base';
 import { CACHE_REPOSITORY, CrawlerEmail } from '../../../models/configuration';
-import { JWTContext, parseJWT, withSafeKoaRouter } from '../core';
+import { JWTContext, parseJWT, safeAPI } from '../core';
 
 export interface CrawlerTask {
   URI: string;
@@ -13,7 +13,7 @@ export const config = { api: { bodyParser: false } };
 
 const router = createKoaRouter(import.meta.url);
 
-router.post('/', parseJWT, async (context: JWTContext) => {
+router.post('/', safeAPI, parseJWT, async (context: JWTContext) => {
   if (!('user' in context.state) || context.state.user.email !== CrawlerEmail)
     return context.throw(401);
 
@@ -28,4 +28,4 @@ router.post('/', parseJWT, async (context: JWTContext) => {
   context.body = body;
 });
 
-export default withSafeKoaRouter(router);
+export default withKoaRouter(router);
