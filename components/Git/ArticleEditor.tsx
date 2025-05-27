@@ -4,15 +4,16 @@ import { marked } from 'marked';
 import { computed, observable } from 'mobx';
 import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
+import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
 import dynamic from 'next/dynamic';
-import { ChangeEvent, Component, FormEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
 import { GitRepositoryModel, userStore } from '../../models/Repository';
-import { t } from '../../models/Translation';
+import { i18n, I18nContext } from '../../models/Translation';
 import { ListField } from '../Form/JSONEditor';
 import { PathSelect } from './PathSelect';
 import { RepositorySelect } from './RepositorySelect';
@@ -34,7 +35,9 @@ export interface PostMeta extends Record<'title' | 'date', string>, DataObject {
 export type HyperLink = HTMLAnchorElement | HTMLImageElement;
 
 @observer
-export class ArticleEditor extends Component {
+export class ArticleEditor extends ObservedComponent<{}, typeof i18n> {
+  static contextType = I18nContext;
+
   @observable
   accessor repository = '';
 
@@ -52,9 +55,7 @@ export class ArticleEditor extends Component {
   get repositoryStore() {
     const { owner } = this.currentRepository;
 
-    return new GitRepositoryModel(
-      owner === userStore.session?.login ? '' : owner,
-    );
+    return new GitRepositoryModel(owner === userStore.session?.login ? '' : owner);
   }
 
   path = '';
@@ -66,8 +67,7 @@ export class ArticleEditor extends Component {
   static contentFilter({ type, name }: GitContent) {
     return (
       type === 'dir' ||
-      (type === 'file' &&
-        Object.values(fileType).flat().includes(name.split('.').slice(-1)[0]))
+      (type === 'file' && Object.values(fileType).flat().includes(name.split('.').slice(-1)[0]))
     );
   }
 
@@ -136,18 +136,14 @@ export class ArticleEditor extends Component {
 
     if (root)
       for (const element of root.querySelectorAll<HyperLink>('[href], [src]')) {
-        let URI =
-          element instanceof HTMLAnchorElement ? element.href : element.src;
+        let URI = element instanceof HTMLAnchorElement ? element.href : element.src;
 
         if (URI.startsWith(pageURL)) URI = URI.slice(pageURL.length);
 
         URI = new URL(URI, this.currentFileURL || window.location.href) + '';
 
         if (element instanceof HTMLImageElement)
-          element.src = URI.replace(
-            repository + '/blob/',
-            repository + '/raw/',
-          );
+          element.src = URI.replace(repository + '/blob/', repository + '/raw/');
         else element.href = URI;
       }
   });
@@ -191,10 +187,7 @@ export class ArticleEditor extends Component {
     for (const file of media) {
       const blob = await blobOf(file.src);
 
-      const filePath = this.path.replace(
-        /\.\w+$/,
-        `/${uniqueID()}.${blob.type.split('/')[1]}`,
-      );
+      const filePath = this.path.replace(/\.\w+$/, `/${uniqueID()}.${blob.type.split('/')[1]}`);
       const { download_url } = await repositoryStore.updateContent(
         filePath,
         blob,
@@ -230,40 +223,28 @@ export class ArticleEditor extends Component {
   };
 
   render() {
-    const { repository, meta, editorContent } = this;
+    const { t } = this.observedContext,
+      { repository, meta, editorContent } = this;
 
     return (
-      <Form
-        className="my-3 d-flex flex-column gap-3"
-        onReset={this.reset}
-        onSubmit={this.submit}
-      >
+      <Form className="my-3 d-flex flex-column gap-3" onReset={this.reset} onSubmit={this.submit}>
         <Form.Group className="row">
           <label className="col-sm-2 col-form-label">{t('repository')}</label>
           <RepositorySelect
-            onChange={({ owner, name }) =>
-              (this.repository = `${owner}/${name}`)
-            }
+            onChange={({ owner, name }) => (this.repository = `${owner}/${name}`)}
           />
         </Form.Group>
         <Form.Group className="row">
           <label className="col-sm-2 col-form-label">{t('file_path')}</label>
 
-          {repository && (
-            <PathSelect repository={repository} onChange={this.loadFile} />
-          )}
+          {repository && <PathSelect repository={repository} onChange={this.loadFile} />}
         </Form.Group>
         <Form.Group className="row align-items-center">
-          <label className="col-sm-2 col-form-label">
-            {t('commit_message')}
-          </label>
+          <label className="col-sm-2 col-form-label">{t('commit_message')}</label>
           <Col sm={7}>
             <Form.Control as="textarea" name="message" required />
           </Col>
-          <Col
-            sm={3}
-            className="d-flex flex-wrap gap-2 justify-content-around align-items-center"
-          >
+          <Col sm={3} className="d-flex flex-wrap gap-2 justify-content-around align-items-center">
             <Button type="submit">{t('commit')}</Button>
             <Button type="reset" variant="danger">
               {t('clear')}
@@ -276,9 +257,7 @@ export class ArticleEditor extends Component {
             <label>{t('meta')}</label>
             <ListField
               value={meta}
-              onChange={({ currentTarget: { value } }) =>
-                (this.meta = value as PostMeta)
-              }
+              onChange={({ currentTarget: { value } }) => (this.meta = value as PostMeta)}
             />
           </Form.Group>
         )}

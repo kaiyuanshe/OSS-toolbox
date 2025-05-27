@@ -1,6 +1,6 @@
 import { FeatureAttitude, InfectionRange } from 'license-filter';
 
-import { t } from '../../models/Translation';
+import { i18n } from '../../models/Translation';
 
 type OptionValue = Record<string, { value: number; text: string }[]>;
 
@@ -18,21 +18,12 @@ const options: string[] = [
   'marketingEndorsement',
 ];
 
-export const optionValue = () => {
+export const optionValue = ({ t }: typeof i18n) => {
   const optionValue = options.reduce((optionValue, option) => {
     optionValue[option] = [
-      {
-        value: FeatureAttitude.Undefined,
-        text: t('feature_attitude_undefined'),
-      },
-      {
-        value: FeatureAttitude.Positive,
-        text: t('feature_attitude_positive'),
-      },
-      {
-        value: FeatureAttitude.Negative,
-        text: t('feature_attitude_negative'),
-      },
+      { value: FeatureAttitude.Undefined, text: t('feature_attitude_undefined') },
+      { value: FeatureAttitude.Positive, text: t('feature_attitude_positive') },
+      { value: FeatureAttitude.Negative, text: t('feature_attitude_negative') },
     ];
 
     return optionValue;
@@ -48,11 +39,8 @@ export const optionValue = () => {
   return optionValue;
 };
 
-export const licenseTips: () => LicenseTips = () => ({
-  popularity: [
-    { text: t('tip_popularity_0') },
-    { text: t('tip_popularity_1') },
-  ],
+export const licenseTips = ({ t }: typeof i18n): LicenseTips => ({
+  popularity: [{ text: t('tip_popularity_0') }, { text: t('tip_popularity_1') }],
   reuseCondition: [{ text: t('tip_reuse_condition') }],
   infectionIntensity: [{ text: t('tip_infection_intensity') }],
   jurisdiction: [{ text: t('tip_jurisdiction') }],

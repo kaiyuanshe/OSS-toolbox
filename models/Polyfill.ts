@@ -1,15 +1,9 @@
 import { computed, observable } from 'mobx';
-import {
-  Filter,
-  ListModel,
-  persist,
-  restore,
-  Stream,
-  toggle,
-} from 'mobx-restful';
+import { Filter, ListModel, persist, restore, Stream, toggle } from 'mobx-restful';
 import { buildURLData, Day, isEmpty } from 'web-utility';
 
-import { isServer, ownClient, polyfillClient, PolyfillHost } from './Base';
+import { ownClient, polyfillClient } from './Base';
+import { isServer, PolyfillHost } from './configuration';
 
 export type JSEnvironment = 'window' | 'worker' | 'node';
 
@@ -39,10 +33,7 @@ export interface LibrarySuite {
   polyfills: string[];
 }
 
-export type PolyfillIndex = Record<
-  string,
-  RemoteLibrary | LocalLibrary | LibrarySuite
->;
+export type PolyfillIndex = Record<string, RemoteLibrary | LocalLibrary | LibrarySuite>;
 
 export interface Polyfill extends Library {
   name: string;
@@ -80,8 +71,7 @@ export class PolyfillModel extends Stream<Polyfill>(ListModel) {
       this.index = body!;
     }
     for (const [name, meta] of Object.entries(this.index))
-      if (!('polyfills' in meta) && (!keyword || name.includes(keyword)))
-        yield { name, ...meta };
+      if (!('polyfills' in meta) && (!keyword || name.includes(keyword))) yield { name, ...meta };
   }
 
   @toggle('downloading')

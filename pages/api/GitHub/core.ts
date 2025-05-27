@@ -1,31 +1,31 @@
-import { githubClient } from 'mobx-github';
+import { Context, Middleware } from 'koa';
 import { githubOAuth2 } from 'next-ssr-middleware';
 
-import { ProxyBaseURL } from '../../../models/Base';
-import { safeAPI } from '../core';
+import { githubClient } from '../../../models/Base';
+import { ProxyBaseURL, VERCEL } from '../../../models/configuration';
 
-export const proxyGithub = <T>(dataFilter?: (path: string, data: T) => T) =>
-  safeAPI(async ({ method, url, headers, body }, response) => {
-    delete headers.host;
+export const proxyGithub = async <T>({
+  method,
+  url,
+  headers: { host, ...headers },
+  request,
+}: Context) => {
+  const path = url!.slice(`/api/GitHub/`.length),
+    body = Reflect.get(request, 'body');
 
-    const path = url!.slice(`/api/GitHub/`.length);
+  // @ts-expect-error KoAJAX type compatibility
+  return githubClient.request<T>({ method, path, headers, body });
+};
 
-    const { status, body: data } = await githubClient.request<T>({
-      // @ts-expect-error KoAJAX type compatibility
-      method,
-      path,
-      // @ts-expect-error KoAJAX type compatibility
-      headers,
-      body: body || undefined,
-    });
+export const proxyGitHubAll: Middleware = async context => {
+  const { status, body } = await proxyGithub(context);
 
-    response.status(status);
-    response.send(dataFilter?.(path, data as T) || data);
-  });
+  context.status = status;
+  context.body = body;
+};
 
 const client_id = process.env.GITHUB_OAUTH_CLIENT_ID!,
-  client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!,
-  { VERCEL } = process.env;
+  client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET!;
 
 export const githubOAuth = githubOAuth2({
   rootBaseURL: VERCEL ? undefined : `${ProxyBaseURL}/github.com/`,

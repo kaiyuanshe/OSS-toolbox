@@ -1,27 +1,27 @@
 import { observer } from 'mobx-react';
 import Head from 'next/head';
-import type { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 
-import { i18n } from '../models/Translation';
+import { Summary } from '../models/configuration';
+import { I18nContext } from '../models/Translation';
 
 export type PageHeadProps = PropsWithChildren<{
   title?: string;
   description?: string;
 }>;
 
-const { t } = i18n,
-  Summary = process.env.NEXT_PUBLIC_SITE_SUMMARY;
-
 export const PageHead: FC<PageHeadProps> = observer(
-  ({ title, description = Summary, children }) => (
-    <Head>
-      <title>
-        {`${title ? `${title} - ` : ''}${t('open_source_treasure_box')}`}
-      </title>
+  ({ title = '', description = Summary, children }) => {
+    const { t } = useContext(I18nContext);
 
-      {description && <meta name="description" content={description} />}
+    return (
+      <Head>
+        <title>{`${title && `${title} - `}${t('open_source_treasure_box')}`}</title>
 
-      {children}
-    </Head>
-  ),
+        {description && <meta name="description" content={description} />}
+
+        {children}
+      </Head>
+    );
+  },
 );

@@ -1,28 +1,46 @@
-import { Head, Html, Main, NextScript } from 'next/document';
+import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
-export default function Document() {
-  return (
-    <Html>
-      <Head>
-        <link rel="icon" href="https://kaiyuanshe.cn/image/KaiYuanShe.png" />
+import { LanguageCode, parseSSRContext } from '../models/Translation';
 
-        <link rel="manifest" href="/manifest.json" />
-        <script src="https://polyfill.web-cell.dev/feature/PWAManifest.js" />
+interface CustomDocumentProps {
+  language: LanguageCode;
+  colorScheme: 'light' | 'dark';
+}
 
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        />
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-        />
-      </Head>
+export default class CustomDocument extends Document<CustomDocumentProps> {
+  static async getInitialProps(context: DocumentContext) {
+    return {
+      ...(await Document.getInitialProps(context)),
+      ...parseSSRContext<CustomDocumentProps>(context, ['language']),
+    };
+  }
 
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+  render() {
+    const { language, colorScheme } = this.props;
+
+    return (
+      <Html lang={language} data-bs-theme={colorScheme}>
+        <Head>
+          <link rel="icon" href="https://kaiyuanshe.cn/image/KaiYuanShe.png" />
+
+          <link rel="manifest" href="/manifest.json" />
+          <script src="https://polyfill.web-cell.dev/feature/PWAManifest.js" />
+
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+          />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+          />
+        </Head>
+
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
