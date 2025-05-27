@@ -1,4 +1,4 @@
-import { t } from '../models/Translation';
+import { i18n } from '../models/Translation';
 
 export interface Link {
   title: string;
@@ -6,7 +6,7 @@ export interface Link {
   subs?: Link[];
 }
 
-export const MainRoutes: () => Link[] = () => [
+export const MainRoutes = ({ t }: typeof i18n): Link[] => [
   {
     title: 'GitHub issues',
     path: '/issue',

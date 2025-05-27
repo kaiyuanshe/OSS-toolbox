@@ -3,31 +3,17 @@ import 'core-js/full/array/from-async';
 import { HTTPClient } from 'koajax';
 import { githubClient } from 'mobx-github';
 
-export const isServer = () => typeof window === 'undefined';
-
-const VercelHost = process.env.VERCEL_URL;
-
-export const API_Host = isServer()
-  ? VercelHost
-    ? `https://${VercelHost}`
-    : 'http://localhost:3000'
-  : globalThis.location.origin;
+import { API_Host, GithubToken, isServer, PolyfillHost, ProxyBaseURL } from './configuration';
 
 export const ownClient = new HTTPClient({
   baseURI: `${API_Host}/api/`,
   responseType: 'json',
 });
 
-export const PolyfillHost = 'https://polyfiller.kaiyuanshe.cn';
-
 export const polyfillClient = new HTTPClient({
   baseURI: PolyfillHost,
   responseType: 'text',
 });
-
-const GithubToken =
-  (globalThis.location && new URLSearchParams(location.search).get('token')) ||
-  process.env.GITHUB_TOKEN;
 
 if (!isServer()) githubClient.baseURI = `${API_Host}/api/GitHub/`;
 
@@ -40,7 +26,7 @@ githubClient.use(({ request }, next) => {
   return next();
 });
 
-export const ProxyBaseURL = 'https://test.oss-toolbox.kaiyuanshe.cn/proxy';
+export { githubClient };
 
 export const githubRawClient = new HTTPClient({
   baseURI: `${ProxyBaseURL}/raw.githubusercontent.com/`,

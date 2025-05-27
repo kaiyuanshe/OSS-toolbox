@@ -1,22 +1,11 @@
-import {
-  FeatureAttitude,
-  filterLicenses,
-  InfectionRange,
-  License,
-} from 'license-filter';
+import { FeatureAttitude, filterLicenses, InfectionRange, License } from 'license-filter';
 import { observer } from 'mobx-react';
-import { FC, useEffect, useState } from 'react';
-import {
-  Accordion,
-  Button,
-  ButtonGroup,
-  Container,
-  ProgressBar,
-} from 'react-bootstrap';
+import { FC, useContext, useEffect, useState } from 'react';
+import { Accordion, Button, ButtonGroup, Container, ProgressBar } from 'react-bootstrap';
 
 import { licenseTips, optionValue } from '../components/License/helper';
 import { PageHead } from '../components/PageHead';
-import { t } from '../models/Translation';
+import { i18n, I18nContext } from '../models/Translation';
 
 interface List {
   license: License;
@@ -37,6 +26,9 @@ const choiceSteps = [
 ] as const;
 
 const LicenseTool: FC = observer(() => {
+  const i18n = useContext(I18nContext);
+  const { t } = i18n;
+
   const [stepIndex, setStepIndex] = useState(0);
   const [keyIndex, setKeyIndex] = useState(0);
   const [filterOption, setFilterOption] = useState({});
@@ -75,11 +67,7 @@ const LicenseTool: FC = observer(() => {
     setFilterOption(newObject);
 
     setStepIndex(
-      stepIndex === choiceSteps.length
-        ? stepIndex - 2
-        : stepIndex > 0
-          ? stepIndex - 1
-          : stepIndex,
+      stepIndex === choiceSteps.length ? stepIndex - 2 : stepIndex > 0 ? stepIndex - 1 : stepIndex,
     );
     setKeyIndex(keyIndex > 0 ? keyIndex - 1 : keyIndex);
 
@@ -99,7 +87,7 @@ const LicenseTool: FC = observer(() => {
         {t('filter_option')}: {t(choiceSteps[keyIndex])}
       </h2>
 
-      {licenseTips()[choiceSteps[keyIndex]].map(({ text }) => (
+      {licenseTips(i18n)[choiceSteps[keyIndex]].map(({ text }) => (
         <p key={text}>{text}</p>
       ))}
       <ProgressBar
@@ -112,7 +100,7 @@ const LicenseTool: FC = observer(() => {
         {t('last_step')}
       </Button>
       <ButtonGroup className="mb-2">
-        {optionValue()[choiceSteps[keyIndex]].map(({ value, text }) => (
+        {optionValue(i18n)[choiceSteps[keyIndex]].map(({ value, text }) => (
           <Button
             key={value}
             className="mx-1"
@@ -132,7 +120,7 @@ const LicenseTool: FC = observer(() => {
             <Accordion.Header>
               {license.name} {t('license_score')}: {score * 10}
             </Accordion.Header>
-            <Accordion.Body>{renderInfo(license)}</Accordion.Body>
+            <Accordion.Body>{renderInfo(license, i18n)}</Accordion.Body>
           </Accordion.Item>
         ))}
       </Accordion>
@@ -140,7 +128,7 @@ const LicenseTool: FC = observer(() => {
   );
 });
 
-function renderInfo({ link, feature }: License) {
+function renderInfo({ link, feature }: License, { t }: typeof i18n) {
   const judge = (attitude: FeatureAttitude) =>
     ({
       [FeatureAttitude.Positive]: t('attitude_positive'),

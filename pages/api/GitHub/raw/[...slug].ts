@@ -1,9 +1,14 @@
 import { fileTypeFromBuffer } from 'file-type';
 import { githubClient } from 'mobx-github';
+import { createKoaRouter } from 'next-ssr-middleware';
 
-import { safeAPI } from '../../core';
+export const config = { api: { bodyParser: false } };
 
-export default safeAPI(async ({ method, url, headers, body }, response) => {
+const router = createKoaRouter(import.meta.url);
+
+router.all('/(.*)', async context => {
+  const { method, url, headers, body } = context;
+
   delete headers.host;
 
   const path = `https://raw.githubusercontent.com/${url!.slice(`/api/GitHub/raw/`.length)}`;
@@ -25,7 +30,7 @@ export default safeAPI(async ({ method, url, headers, body }, response) => {
 
   const { mime } = (await fileTypeFromBuffer(buffer)) || {};
 
-  response.status(status);
-  response.setHeader('Content-Type', mime || 'application/octet-stream');
-  response.send(buffer);
+  context.status = status;
+  context.set('Content-Type', mime || 'application/octet-stream');
+  context.body = buffer;
 });

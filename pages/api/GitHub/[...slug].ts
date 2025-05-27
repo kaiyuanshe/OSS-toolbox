@@ -1,3 +1,12 @@
-import { proxyGithub } from './core';
+import { createKoaRouter } from 'next-ssr-middleware';
 
-export default proxyGithub();
+import { withSafeKoaRouter } from '../core';
+import { proxyGitHubAll } from './core';
+
+export const config = { api: { bodyParser: false } };
+
+const router = createKoaRouter(import.meta.url);
+
+router.get('/(.*)', proxyGitHubAll);
+
+export default withSafeKoaRouter(router);
