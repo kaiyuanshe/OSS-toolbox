@@ -16,7 +16,6 @@ const CustomTools = OriginalTools.filter(
   Tool => !ExcludeTools.includes(Tool as Constructor<IFrameTool>),
 );
 
-const HTMLEditor: FC<EditorProps> = props => (
+export const HTMLEditor: FC<EditorProps> = props => (
   <Editor tools={[...CustomTools, CopyMarkdownTool]} {...props} />
 );
-export default HTMLEditor;

@@ -1,3 +1,4 @@
+import { Loading } from 'idea-react';
 import { readAs } from 'koajax';
 import { debounce } from 'lodash';
 import { marked } from 'marked';
@@ -6,19 +7,17 @@ import { GitContent } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
-import dynamic from 'next/dynamic';
+import { SearchableInput } from 'mobx-restful-table';
 import { ChangeEvent, FormEvent } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import { blobOf, formatDate, uniqueID } from 'web-utility';
 import YAML from 'yaml';
 
-import { GitRepositoryModel, userStore } from '../../models/Repository';
+import { GitFileSearchModel } from '../../models/GitFile';
+import { GitRepositoryModel, RepositorySearchModel, userStore } from '../../models/Repository';
 import { i18n, I18nContext } from '../../models/Translation';
+import { HTMLEditor } from '../Form/HTMLEditor';
 import { ListField } from '../Form/JSONEditor';
-import { PathSelect } from './PathSelect';
-import { RepositorySelect } from './RepositorySelect';
-
-const HTMLEditor = dynamic(() => import('../Form/HTMLEditor'), { ssr: false });
 
 export const fileType = {
   MarkDown: ['md', 'markdown'],
@@ -57,6 +56,10 @@ export class ArticleEditor extends ObservedComponent<{}, typeof i18n> {
 
     return new GitRepositoryModel(owner === userStore.session?.login ? '' : owner);
   }
+
+  repositorySearchStore = new RepositorySearchModel();
+
+  gitFileStore = new GitFileSearchModel();
 
   path = '';
   currentFileURL = '';
@@ -223,21 +226,41 @@ export class ArticleEditor extends ObservedComponent<{}, typeof i18n> {
   };
 
   render() {
-    const { t } = this.observedContext,
-      { repository, meta, editorContent } = this;
+    const i18n = this.observedContext,
+      { repository, meta, editorContent } = this,
+      { downloading, uploading } = this.repositoryStore;
+    const { t } = i18n,
+      loading = downloading > 0 || uploading > 0;
 
     return (
       <Form className="my-3 d-flex flex-column gap-3" onReset={this.reset} onSubmit={this.submit}>
+        {loading && <Loading />}
+
         <Form.Group className="row">
           <label className="col-sm-2 col-form-label">{t('repository')}</label>
-          <RepositorySelect
-            onChange={({ owner, name }) => (this.repository = `${owner}/${name}`)}
+          <SearchableInput
+            translator={i18n}
+            store={this.repositorySearchStore}
+            valueKey="full_name"
+            labelKey="full_name"
+            placeholder="Search owner/repository"
+            onChange={([{ label } = {}]) => (this.repository = label || '')}
           />
         </Form.Group>
         <Form.Group className="row">
           <label className="col-sm-2 col-form-label">{t('file_path')}</label>
 
-          {repository && <PathSelect repository={repository} onChange={this.loadFile} />}
+          {repository && (
+            <SearchableInput
+              translator={i18n}
+              store={this.gitFileStore}
+              filter={{ repository }}
+              valueKey="path"
+              labelKey="path"
+              placeholder="search File Path"
+              onChange={([{ label }]) => this.loadFile(label)}
+            />
+          )}
         </Form.Group>
         <Form.Group className="row align-items-center">
           <label className="col-sm-2 col-form-label">{t('commit_message')}</label>
