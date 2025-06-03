@@ -1,12 +1,13 @@
 import { Loading } from 'idea-react';
-import { computed, observable, reaction } from 'mobx';
-import { RepositoryModel } from 'mobx-github';
+import { computed, observable } from 'mobx';
+import { OrganizationModel, RepositoryModel } from 'mobx-github';
 import { observer } from 'mobx-react';
-import { Component } from 'react';
+import { ObservedComponent } from 'mobx-react-helper';
+import { SearchableInput } from 'mobx-restful-table';
 import { Col, Row } from 'react-bootstrap';
 
 import { userStore } from '../../models/Repository';
-import { SelectInput } from '../Form/SelectInput';
+import { i18n, I18nContext } from '../../models/Translation';
 
 export type RepositoryIdentity = Record<'owner' | 'name', string>;
 
@@ -15,9 +16,16 @@ export interface RepositorySelectProps {
 }
 
 @observer
-export class RepositorySelect extends Component<RepositorySelectProps> {
+export class RepositorySelect extends ObservedComponent<RepositorySelectProps, typeof i18n> {
+  static contextType = I18nContext;
+
   @observable
   accessor owner = '';
+
+  @computed
+  get organizationStore() {
+    return new OrganizationModel(userStore.session?.login);
+  }
 
   @computed
   get repositoryStore() {
@@ -30,39 +38,32 @@ export class RepositorySelect extends Component<RepositorySelectProps> {
     userStore.getSession();
   }
 
-  #disposer = reaction(
-    () => this.owner,
-    () => this.repositoryStore.getAll(),
-  );
-
-  componentWillUnmount() {
-    this.#disposer();
-  }
-
   render() {
-    const { namespaces } = userStore,
-      repositories = this.repositoryStore.allItems,
-      downloading = userStore.downloading || this.repositoryStore.downloading;
+    const i18n = this.observedContext,
+      { downloading, session } = userStore;
+    const { login } = session || {};
 
     return (
       <Row xs={1} sm={2}>
         {downloading > 0 && <Loading />}
         <Col>
-          <SelectInput
-            className="form-control"
-            options={namespaces.map(({ login }) => login)}
-            onBlur={({ currentTarget: { value } }) =>
-              value.trim() && (this.owner = value)
-            }
+          <SearchableInput
+            translator={i18n}
+            store={this.organizationStore}
+            valueKey="id"
+            labelKey="login"
+            placeholder={`Search organization or Leave blank as ${login}`}
+            onChange={([{ label } = {}]) => (this.owner = label || '')}
           />
         </Col>
         <Col>
-          <SelectInput
-            className="form-control"
-            options={repositories.map(({ name }) => name!)}
-            onBlur={({ currentTarget: { value } }) =>
-              value.trim() &&
-              this.props.onChange({ owner: this.owner, name: value })
+          <SearchableInput
+            translator={i18n}
+            store={this.repositoryStore}
+            valueKey="full_name"
+            labelKey="name"
+            onChange={([{ label } = {}]) =>
+              label && this.props.onChange({ owner: this.owner, name: label })
             }
           />
         </Col>
